@@ -24,15 +24,19 @@ public class OpenApi {
             spec.addTag("common", "Common Operations");
             spec.addPath(
                     new Path("/example")
-                            .addMethod("GET", new PathSchema()
+                            .addMethod(Operation.GET, new PathSchema()
                                     .addTag("common")
                                     .addResponse(200, new TObject()
+                                            .addExample("World", new JSONObject()
+                                                    .put("text", "Hello World"), "World Example")
+                                            .addExample("User", new JSONObject()
+                                                    .put("text", "Hello User")
+                                            )
                                             .addProperty("text", new TString()
                                                     .options("Hello World")
                                             )
                                     )
                                     .addResponse(500, new TObject()
-                                            .description("")
                                             .example(new JSONObject()
                                                     .put("error", RuntimeException.class.getName())
                                                     .put("detail", "example")
@@ -48,7 +52,9 @@ public class OpenApi {
                             )
             );
         } catch (Exception error) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(spec.build(error).toString());
+            // internal server error would be the better status but then the error-formatted openapi-specification
+            // would not be displayed
+            return ResponseEntity.status(HttpStatus.OK).body(spec.build(error).toString());
         }
         return ResponseEntity.ok(spec.build().toString());
     }
