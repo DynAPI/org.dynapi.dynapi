@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DynAPI - redoc</title>
+    <!-- needed for adaptive design -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+
+    <!--
+    ReDoc doesn't change outer page styles
+    -->
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      div > a[href="https://redocly.com/redoc/"] {
+        display: none;
+      }
+</style>
+  </head>
+  <body>
+    <noscript>
+        ReDoc requires Javascript to function. Please enable it to browse the documentation.
+    </noscript>
+    <div id="redoc"></div>
+    <script src="https://cdn.jsdelivr.net/npm/redoc/bundles/redoc.standalone.js"> </script>
+
+    <script>
+        const openapiSpecEndpoint = "openapi";
+        /* https://redocly.com/docs/api-reference-docs/configuration/functionality/ */
+        Redoc.init(openapiSpecEndpoint, {
+            ctrlFHijack: true,
+            defaultSampleLanguage: true,
+            /* expandResponses: 'all', */
+            generateCodeSamples: {
+                languages: [
+                    {lang: "curl"},
+                    {lang: "JavaScript"},
+                    {lang: "Python"},
+                ]
+            }
+        }, document.getElementById('redoc'))
+     </script>
+  </body>
+</html>
