@@ -24,6 +24,8 @@ repositories {
 }
 
 dependencies {
+    // dynapi
+    implementation files('libs/openapispec.jar')
     // spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -32,6 +34,8 @@ dependencies {
     // lambok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    // json
+    implementation 'org.json:json:20240303'
     // databases
     runtimeOnly 'com.mysql:mysql-connector-j'
     runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
