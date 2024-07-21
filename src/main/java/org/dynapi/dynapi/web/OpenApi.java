@@ -1,6 +1,7 @@
 package org.dynapi.dynapi.web;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,9 @@ import org.dynapi.openapispec.core.types.*;
 @RestController
 @RequestMapping("/")
 public class OpenApi {
+    @Value("${server.servlet.context-path:/}")
+    private String baseUrl;
+
     @GetMapping(value = "/openapi", produces = "application/json")
     public ResponseEntity<String> getOpenApi() {
         OpenApiSpecBuilder.Meta meta = OpenApiSpecBuilder.Meta.builder()
@@ -21,6 +25,8 @@ public class OpenApi {
                 .build();
         OpenApiSpecBuilder spec = new OpenApiSpecBuilder(meta);
         try {
+            if (baseUrl.length() > 1)
+                spec.addServer(baseUrl);
             spec.addTag("common", "Common Operations");
             spec.addPath(
                     new Path("/example")
