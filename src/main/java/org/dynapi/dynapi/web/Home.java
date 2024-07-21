@@ -20,6 +20,14 @@ public class Home {
         return ResponseEntity.ok("Hello World");
     }
 
+    @GetMapping(value = "/redoc", produces = "text/html")
+    public ResponseEntity<?> redoc() {
+        InputStream stream = getClass().getResourceAsStream("/static/html/redoc.html");
+        if (stream == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to load redoc.html");
+        return ResponseEntity.ok(new InputStreamResource(stream));
+    }
+
     @GetMapping(value = "/swagger", produces = "text/html")
     public ResponseEntity<?> swagger() {
         InputStream stream = getClass().getResourceAsStream("/static/html/swagger.html");
