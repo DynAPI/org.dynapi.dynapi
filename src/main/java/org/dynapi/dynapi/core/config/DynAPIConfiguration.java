@@ -6,7 +6,7 @@ import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
-import java.io.InputStream;
+import java.io.*;
 
 @Slf4j
 @Data
@@ -21,8 +21,14 @@ public class DynAPIConfiguration {
     public static DynAPIConfiguration load() {
         LoaderOptions loaderOptions = new LoaderOptions();
         Yaml yaml = new Yaml(new Constructor(DynAPIConfiguration.class, loaderOptions));
-        InputStream inputStream = DynAPIConfiguration.class.getResourceAsStream("/dynapi.yaml");
-        return yaml.load(inputStream);
+        File fp = new File(System.getProperty("dynapi.config", "dynapi.yaml")).getAbsoluteFile();
+        try (InputStream stream = new FileInputStream(fp)) {
+            return yaml.load(stream);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(String.format("Configuration File '%s' does not exist.", fp), e);
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("Error reading configuration file '%s'.", fp), e);
+        }
     }
 
     @Data
