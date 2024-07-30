@@ -34,8 +34,9 @@ dependencies {
     // lambok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    // json
+    // json/yaml
     implementation 'org.json:json:20240303'
+    implementation 'org.yaml:snakeyaml'
     // databases
     runtimeOnly 'com.mysql:mysql-connector-j'
     runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
