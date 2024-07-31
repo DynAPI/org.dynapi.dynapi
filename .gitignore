@@ -1,4 +1,5 @@
-/src/main/resources/dynapi.yaml
+/.env
+/dynapi.yaml
 
 /tmp/
 /libs/
