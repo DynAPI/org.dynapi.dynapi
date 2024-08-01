@@ -1,5 +1,4 @@
 /gradle.properties
-/.env
 /dynapi.yaml
 
 /tmp/
