@@ -22,23 +22,19 @@ configurations {
 repositories {
     mavenCentral()
     maven {
-        // just don't ask about this part
         url = "https://maven.pkg.github.com/DynAPI/org.dynapi.dynapi"
-//        credentials {
-//            username = System.getenv("GITHUB_PACKAGE_REGISTRY_USER")
-//            password = System.getenv("GITHUB_PACKAGE_REGISTRY_TOKEN")
-//
-//            username = null
-//            password = null
-//        }
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+            password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+        }
     }
 }
 
 dependencies {
     // dynapi
-    implementation 'org.dynapi:squirtle:1.0-SNAPSHOT'
-    implementation 'org.dynapi:openapispec:1.0-SNAPSHOT'
-    implementation 'org.dynapi:jsonschemagen:1.0-SNAPSHOT'
+    implementation 'org.dynapi:squirtle:0.1.0'
+    implementation 'org.dynapi:openapispec:0.1.0'
+    implementation 'org.dynapi:jsonschemagen:0.1.0'
     // spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
