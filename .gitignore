@@ -1,4 +1,5 @@
-dynapi.yaml
+/gradle.properties
+/dynapi.yaml
 
 /tmp/
 /libs/

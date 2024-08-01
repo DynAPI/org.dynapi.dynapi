@@ -21,11 +21,20 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven {
+        url = "https://maven.pkg.github.com/DynAPI/org.dynapi.dynapi"
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+            password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
     // dynapi
-    implementation files('libs/openapispec.jar')
+    implementation 'org.dynapi:squirtle:0.1.0'
+    implementation 'org.dynapi:openapispec:0.1.0'
+    implementation 'org.dynapi:jsonschemagen:0.1.0'
     // spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
