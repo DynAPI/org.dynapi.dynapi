@@ -34,7 +34,7 @@ dependencies {
     // dynapi
     implementation 'org.dynapi:squirtle:0.1.0'
     implementation 'org.dynapi:openapispec:0.1.0'
-    implementation 'org.dynapi:jsonschemagen:0.1.0'
+    implementation 'org.dynapi:jsonschemagen:0.4.1'
     // spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
