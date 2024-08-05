@@ -17,7 +17,6 @@ Dynamic API for many Databases
     * [Realtime updates when the Database changes](#realtime-updates-when-the-database-changes)
     * [Secure](#secure)
     * [Full Control](#full-control)
-  * [developer notes](#developer-notes)
 <!-- TOC -->
 
 ## Supported Databases
@@ -62,8 +61,3 @@ With an (optional) builtin User-Control-System you can limit the access to your 
 ### Full Control
 
 In case you don't want to reveal your whole database it is possible to configure which parts are available.
-
-
-## developer notes
-
-Create a build of [org.dynapi.openapispec](https://github.com/DynAPI/org.dynapi.openapispec) and put it as `openapispec.jar` in `/libs/`
