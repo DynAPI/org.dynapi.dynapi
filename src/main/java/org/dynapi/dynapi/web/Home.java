@@ -27,7 +27,7 @@ public class Home {
         return ResponseEntity.ok("Hello World");
     }
 
-    @GetMapping(value = "/debug", produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping(value = "/configuration", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> debug() {
         if (!configuration.isDebug())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
