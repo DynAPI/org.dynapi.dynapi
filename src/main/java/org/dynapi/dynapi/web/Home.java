@@ -1,6 +1,9 @@
 package org.dynapi.dynapi.web;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dynapi.dynapi.core.config.DynAPIConfiguration;
+import org.json.JSONObject;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,12 +16,22 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.InputStream;
 
 @Slf4j
+@AllArgsConstructor
 @RestController
 @RequestMapping("/")
 public class Home {
+    private DynAPIConfiguration configuration;
+
     @GetMapping(value = "/", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> index() {
         return ResponseEntity.ok("Hello World");
+    }
+
+    @GetMapping(value = "/configuration", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> debug() {
+        if (!configuration.isDebug())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok(new JSONObject(configuration).toString());
     }
 
     @GetMapping(value = "/redoc", produces = MediaType.TEXT_HTML_VALUE)
