@@ -1,7 +1,8 @@
 package org.dynapi.dynapi.web;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +13,14 @@ import org.dynapi.openapispec.OpenApiSpecBuilder;
 import org.dynapi.openapispec.core.*;
 import org.dynapi.openapispec.core.types.*;
 
+/**
+ * /openapi specification endpoint
+ */
+@Slf4j
+@AllArgsConstructor
 @RestController
 @RequestMapping("/")
 public class OpenApi {
-    @Value("${server.servlet.context-path:/}")
-    private String baseUrl;
-
     @GetMapping(value = "/openapi", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getOpenApi() {
         OpenApiSpecBuilder.Meta meta = OpenApiSpecBuilder.Meta.builder()
@@ -26,6 +29,7 @@ public class OpenApi {
                 .build();
         OpenApiSpecBuilder spec = new OpenApiSpecBuilder(meta);
         try {
+            String baseUrl = System.getProperty("server.servlet.context-path", "/");
             if (baseUrl.length() > 1)
                 spec.addServer(baseUrl);
             spec.addTag("common", "Common Operations");
