@@ -18,7 +18,10 @@ public class Application {
 
     public static void main(String[] args) {
         List<String> argList = List.of(args);
-        if (argList.contains("--json-schema")) {
+        if (argList.contains("-h") || argList.contains("--help")) {
+            System.out.println("dynapi [-h] [-v] [--json-schema]");
+            return;
+        } else if (argList.contains("--json-schema")) {
             System.out.println(DynAPIConfiguration.getJsonSchemaStr());
             return;
         }
