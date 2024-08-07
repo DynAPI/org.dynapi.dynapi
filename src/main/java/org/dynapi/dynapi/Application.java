@@ -13,7 +13,8 @@ import java.util.List;
 @Configuration
 @SpringBootApplication
 public class Application {
-    public static DynAPIConfiguration configuration;
+    // somehow we have to create an instance here. otherwise it won't build
+    private static DynAPIConfiguration configuration = new DynAPIConfiguration();
 
     public static void main(String[] args) {
         List<String> argList = List.of(args);
@@ -21,7 +22,7 @@ public class Application {
             System.out.println(DynAPIConfiguration.getJsonSchemaStr());
             return;
         }
-        configuration = DynAPIConfiguration.load();
+        Application.configuration = DynAPIConfiguration.load();
         SystemPropertyUpdater.updateProperties(configuration);
         SpringApplication.run(Application.class, args);
     }
