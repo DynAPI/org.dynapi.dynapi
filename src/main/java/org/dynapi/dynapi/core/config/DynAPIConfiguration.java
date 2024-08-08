@@ -69,16 +69,19 @@ public class DynAPIConfiguration {
     @RequiredArgsConstructor
     public static class DatabaseConfiguration {
         @Required
-        @Description("database dialect")
-        @Examples({"clickhouse", "mssql", "mysql", "oracle", "redshift", "postgresql", "snowflake", "sqlite", "vertica"})
-        private String dialect;
-        @Description("FQDN of the database server")
-        private String host = "localhost";
-        @Description("port of the database")
-        @Constraints(gt = 0)
-        private Integer port = null;
-        @Description("database to use")
-        private String database = null;
+        @Description("database url")
+        @Examples({
+                "jbdc:clickhouse://localhost:8123",
+                "jdbc:sqlserver://localhost:1433",
+                "jdbc:mysql://localhost:3306",
+                "jdbc:oracle:thin:@localhost:1521/dynapi",
+                "jdbc:redshift://examplecluster.abc123xyz789.us-west-2:5439/dynapi",
+                "jdbc:postgresql://localhost:5432/dynapi",
+                "jdbc:snowflake://dynapi.snowflakecomputing.com",
+                "jdbc:sqlite:/dynapi/database.sqlite",
+                "jdbc:vertica://localhost:5433/dynapi",
+        })
+        private String url;
         @RequiredIf("password")
         @Description("username of the user to connect with")
         private String username = null;
