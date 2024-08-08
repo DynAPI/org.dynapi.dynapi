@@ -1,12 +1,10 @@
 package org.dynapi.dynapi;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dynapi.dynapi.core.config.DynAPIConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class SystemPropertyUpdater {
-    private static final Logger log = LoggerFactory.getLogger(SystemPropertyUpdater.class);
-
     public static void updateProperties(DynAPIConfiguration configuration) {
         if ((configuration.isDevelopmentDebug())) {
             System.setProperty("debug", "true");
