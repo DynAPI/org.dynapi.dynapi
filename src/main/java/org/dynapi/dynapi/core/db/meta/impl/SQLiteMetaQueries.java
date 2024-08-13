@@ -12,15 +12,15 @@ import java.util.List;
 public class SQLiteMetaQueries implements MetaQueryGenerator {
 
     @Override
-    public String listSchemasQuery() {
+    public String listSchemas() {
         return SQLiteQuery
                 .select(List.of(new ValueWrapper("schemaname", "main")))
                 .getSql();
     }
 
     @Override
-    public String listTablesQuery() {
-        Table table = new Schema("main").getTable("sqlite_master");
+    public String listTables() {
+        Table table = new Schema("main").table("sqlite_master");
         Field typeField = table.field("type");
         return SQLiteQuery
                 .from(table)
@@ -30,12 +30,12 @@ public class SQLiteMetaQueries implements MetaQueryGenerator {
     }
 
     @Override
-    public String listTableOfSchemaQuery(String schemaName) {
+    public String listTableOfSchema(String schemaName) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
-    public String listColumnsOfTableQuery(String schemaName, String tableName) {
+    public String listColumnsOfTable(String schemaName, String tableName) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 }
