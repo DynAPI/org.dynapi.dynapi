@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,16 +28,34 @@ public class Meta {
 
     @GetMapping(value = "/schemas", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> schemas() {
-        String sqlQuery = queries.listSchemasQuery();
+        String sqlQuery = queries.listSchemas();
+        log.info(sqlQuery);
         List<Map<String, Object>> raw = database.queryForList(sqlQuery);
         List<String> data = raw.stream().map(entry -> (String) entry.get("schemaname")).toList();
         return ResponseEntity.ok(data);
     }
 
+    @GetMapping(value = "/tables/{schema-name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> tablesOfSchema(@PathVariable("schema-name") String schemaName) {
+        String sqlQuery = queries.listTableOfSchema(schemaName);
+        log.info(sqlQuery);
+        List<Map<String, Object>> data = database.queryForList(sqlQuery);
+        return ResponseEntity.ok(data);
+    }
+
     @GetMapping(value = "/tables", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> tables() {
-        String sqlQuery = queries.listTablesQuery();
-        List<?> data = database.queryForList(sqlQuery);
+        String sqlQuery = queries.listTables();
+        log.info(sqlQuery);
+        List<Map<String, Object>> data = database.queryForList(sqlQuery);
+        return ResponseEntity.ok(data);
+    }
+
+    @GetMapping(value = "/columns/{schema-name}/{table-name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> columns(@PathVariable("schema-name") String schemaName, @PathVariable("table-name") String tableName) {
+        String sqlQuery = queries.listColumnsOfTable(schemaName, tableName);
+        log.info(sqlQuery);
+        List<Map<String, Object>> data = database.queryForList(sqlQuery);
         return ResponseEntity.ok(data);
     }
 }
