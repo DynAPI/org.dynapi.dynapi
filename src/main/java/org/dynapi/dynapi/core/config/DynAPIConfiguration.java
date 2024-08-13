@@ -4,13 +4,13 @@ import lombok.*;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
-import org.dynapi.jsonschemagen.*;
+import org.dynapi.jsonschema.gen.annotations.*;
+import org.dynapi.jsonschema.gen.JsonSchemaGenerator;
 
 import java.io.*;
 
 @Data
 @RequiredArgsConstructor
-@JsonSchemaAble
 @Description("DynAPI Configuration")
 public class DynAPIConfiguration {
     @Description("enable additional debug information.\nWarning: This may disclose sensible information")
