@@ -18,7 +18,23 @@ public class OpenAPIManager {
     }
 
     public static JSONObject generateOpenAPISpecification() {
-        Info info = Info.builder()
+        OpenApiSpecBuilder specBuilder = new OpenApiSpecBuilder(getInfo());
+
+        String baseUrl = System.getProperty("server.servlet.context-path", "/");
+        if (baseUrl.length() > 1)
+            specBuilder.addServer(Server.builder()
+                    .url(baseUrl)
+                    .build()
+            );
+
+        for (OpenAPIProvider provider : providers)
+            provider.generateOpenAPISpecification(specBuilder);
+
+        return specBuilder.build();
+    }
+
+    private static Info getInfo() {
+        return Info.builder()
                 .title("DynAPI")
                 .description("Dynamic API for many Databases")
                 .version("0.0.0")
@@ -33,18 +49,5 @@ public class OpenAPIManager {
                         .build()
                 )
                 .build();
-        OpenApiSpecBuilder specBuilder = new OpenApiSpecBuilder(info);
-
-        String baseUrl = System.getProperty("server.servlet.context-path", "/");
-        if (baseUrl.length() > 1)
-            specBuilder.addServer(Server.builder()
-                    .url(baseUrl)
-                    .build()
-            );
-
-        for (OpenAPIProvider provider : providers)
-            provider.generateOpenAPISpecification(specBuilder);
-
-        return specBuilder.build();
     }
 }
