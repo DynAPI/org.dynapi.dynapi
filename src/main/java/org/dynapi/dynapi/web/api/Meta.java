@@ -35,17 +35,17 @@ public class Meta {
         return ResponseEntity.ok(data);
     }
 
-    @GetMapping(value = "/tables/{schema-name}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> tablesOfSchema(@PathVariable("schema-name") String schemaName) {
-        String sqlQuery = queries.listTableOfSchema(schemaName);
+    @GetMapping(value = "/tables", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> tables() {
+        String sqlQuery = queries.listTables();
         log.info(sqlQuery);
         List<Map<String, Object>> data = database.queryForList(sqlQuery);
         return ResponseEntity.ok(data);
     }
 
-    @GetMapping(value = "/tables", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> tables() {
-        String sqlQuery = queries.listTables();
+    @GetMapping(value = "/tables/{schema-name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> tablesOfSchema(@PathVariable("schema-name") String schemaName) {
+        String sqlQuery = queries.listTableOfSchema(schemaName);
         log.info(sqlQuery);
         List<Map<String, Object>> data = database.queryForList(sqlQuery);
         return ResponseEntity.ok(data);
