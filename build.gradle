@@ -38,7 +38,7 @@ dependencies {
     // dynapi
     implementation 'org.dynapi:squirtle:0.2.0'
     implementation 'org.dynapi:openapispec:0.3.4'
-    implementation 'org.dynapi:json-schema-gen:0.7.0'
+    implementation 'org.dynapi:json-schema-gen:0.8.0'
     implementation 'org.dynapi:common:0.2.1'
     // spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -49,6 +49,8 @@ dependencies {
     // lambok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testImplementation 'org.projectlombok:lombok'
     // json/yaml
     implementation 'org.json:json:20240303'
     implementation 'org.yaml:snakeyaml'
