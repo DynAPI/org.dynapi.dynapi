@@ -82,6 +82,9 @@ public class DynAPIConfiguration {
                 "jdbc:vertica://localhost:5433/dynapi",
         })
         private String url;
+        @Description("SQL-Dialect. If your database is not registered but uses a known dialect you can set that here for compatibility.")
+        @Examples({"clickhouse", "sqlserver", "mysql", "oracle", "redshift", "postgresql", "snowflake", "sqlite", "vertica"})
+        private String dialect = null;
         @RequiredIf("password")
         @Description("username of the user to connect with")
         private String username = null;
