@@ -33,10 +33,13 @@ public class SystemPropertyUpdater {
         String url = configuration.getUrl();
         System.setProperty("spring.datasource.url", url);
 
-        // 'jdbc:{dialect}:{...}'
-        int firstColon = url.indexOf(':');
-        int secondColon = url.indexOf(':', firstColon + 1);
-        String dialect = url.substring(firstColon + 1, secondColon);
+        String dialect = configuration.getDialect();
+        if (dialect == null) {  // auto-detection of dialect base on the url
+            // 'jdbc:{dialect}:{...}'
+            int firstColon = url.indexOf(':');
+            int secondColon = url.indexOf(':', firstColon + 1);
+            dialect = url.substring(firstColon + 1, secondColon);
+        }
         System.setProperty("dynapi.dialect", dialect);
 
         if (configuration.getUsername() != null)
