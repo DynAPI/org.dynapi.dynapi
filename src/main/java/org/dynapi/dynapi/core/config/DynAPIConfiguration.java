@@ -13,7 +13,7 @@ import java.io.*;
 @RequiredArgsConstructor
 @Description("DynAPI Configuration")
 public class DynAPIConfiguration {
-    @Description("enable additional debug information.\nWarning: This may disclose sensible information")
+    @Description("Enable additional debug information.\nWarning: This may disclose sensible information")
     private boolean debug = false;
     @Hidden
     private boolean developmentDebug = false;
@@ -44,12 +44,12 @@ public class DynAPIConfiguration {
     @Data
     @RequiredArgsConstructor
     public static class ServerConfiguration {
-        @Description("network address the server should bind to")
+        @Description("Network address the server should bind to")
         private String host = "0.0.0.0";
-        @Description("server port")
+        @Description("Server port")
         @Constraints(gt = 0)
         private Integer port = 6889;
-        @Description("base url of the server")
+        @Description("Base-URL of the server")
         @Constraints(pattern = "^/.*")
         private String baseurl = "/";
     }
@@ -57,11 +57,11 @@ public class DynAPIConfiguration {
     @Data
     @RequiredArgsConstructor
     public static class WebConfiguration {
-        @Description("whether to make the openapi endpoint available (required for swagger and redoc)")
+        @Description("Whether to make the openapi endpoint available (required for swagger and redoc)")
         private boolean openapi = true;
-        @Description("whether to offer swagger as documentation tool")
+        @Description("Whether to offer swagger as documentation tool")
         private boolean swagger = true;
-        @Description("whether to offer redoc as documentation tool")
+        @Description("Whether to offer redoc as documentation tool")
         private boolean redoc = true;
     }
 
@@ -69,7 +69,7 @@ public class DynAPIConfiguration {
     @RequiredArgsConstructor
     public static class DatabaseConfiguration {
         @Required
-        @Description("database url")
+        @Description("Database URL")
         @Examples({
                 "jbdc:clickhouse://localhost:8123",
                 "jdbc:sqlserver://localhost:1433",
@@ -82,14 +82,14 @@ public class DynAPIConfiguration {
                 "jdbc:vertica://localhost:5433/dynapi",
         })
         private String url;
-        @Description("SQL-Dialect. If your database is not registered but uses a known dialect you can set that here for compatibility.")
+        @Description("SQL-Dialect. This is auto-detected from `url`. If your database is not registered, but uses a known dialect, you can set that here for compatibility.")
         @Examples({"clickhouse", "sqlserver", "mysql", "oracle", "redshift", "postgresql", "snowflake", "sqlite", "vertica"})
         private String dialect = null;
         @RequiredIf("password")
-        @Description("username of the user to connect with")
+        @Description("Username of the user to connect with")
         private String username = null;
         @RequiredIf("username")
-        @Description("password of the user to connect with")
+        @Description("Password of the user to connect with")
         private String password = null;
     }
 }
