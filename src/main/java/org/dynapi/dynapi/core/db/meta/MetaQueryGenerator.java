@@ -18,7 +18,7 @@ public interface MetaQueryGenerator {
      * format: {@code {'schemaname', 'tablename'}}
      * @param schemaName database schema
      */
-    String listTableOfSchema(String schemaName);
+    String listTablesOfSchema(String schemaName);
 
     /**
      * returns an SQL-Query that returns the column-information of a specific table of a specific schema <br>

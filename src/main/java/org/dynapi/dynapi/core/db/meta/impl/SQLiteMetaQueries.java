@@ -20,11 +20,11 @@ public class SQLiteMetaQueries implements MetaQueryGenerator {
 
     @Override
     public String listTables() {
-        return listTableOfSchema("main");
+        return listTablesOfSchema("main");
     }
 
     @Override
-    public String listTableOfSchema(String schemaName) {
+    public String listTablesOfSchema(String schemaName) {
         Table table = new Schema(schemaName).table("sqlite_master");
         Field typeField = table.field("type");
         return SQLiteQuery
