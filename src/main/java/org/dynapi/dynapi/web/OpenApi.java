@@ -27,7 +27,7 @@ public class OpenApi {
     public ResponseEntity<String> getOpenApi() {
         Info info = Info.builder()
                 .title("DynAPI")
-                .version("0.0")
+                .version("0.0.0")
                 .build();
         OpenApiSpecBuilder spec = new OpenApiSpecBuilder(info);
         try {
@@ -84,7 +84,9 @@ public class OpenApi {
         } catch (Exception error) {
             // internal server error would be the better status but then the error-formatted openapi-specification
             // would not be displayed
-            return ResponseEntity.status(HttpStatus.OK).body(spec.build(error).toString());
+            String errorDescription = String.format("%s\n\n%s: %s", info.description, error.getClass().getCanonicalName(), error.getMessage());
+            String errorOpenApiSpecification = new OpenApiSpecBuilder(info.withDescription(errorDescription)).build().toString();
+            return ResponseEntity.status(HttpStatus.OK).body(errorOpenApiSpecification);
         }
         return ResponseEntity.ok(spec.build().toString());
     }
