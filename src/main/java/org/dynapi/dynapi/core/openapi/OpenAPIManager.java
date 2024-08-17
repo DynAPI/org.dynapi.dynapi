@@ -7,8 +7,12 @@ import org.dynapi.openapispec.core.objects.License;
 import org.dynapi.openapispec.core.objects.Server;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OpenAPIManager {
     protected static List<OpenAPIProvider> providers = new ArrayList<>();
@@ -18,7 +22,8 @@ public class OpenAPIManager {
     }
 
     public static JSONObject generateOpenAPISpecification() {
-        OpenApiSpecBuilder specBuilder = new OpenApiSpecBuilder(getInfo());
+        Info info = getInfo();
+        OpenApiSpecBuilder specBuilder = new OpenApiSpecBuilder(info);
 
         String baseUrl = System.getProperty("server.servlet.context-path", "/");
         if (baseUrl.length() > 1)
@@ -27,16 +32,40 @@ public class OpenAPIManager {
                     .build()
             );
 
-        for (OpenAPIProvider provider : providers)
-            provider.generateOpenAPISpecification(specBuilder);
+        Map<String, Throwable> generationErrors = new HashMap<>();
+
+        for (OpenAPIProvider provider : providers) {
+            try {
+                provider.generateOpenAPISpecification(specBuilder);
+            } catch (Throwable e) {
+                generationErrors.put(provider.getClass().getCanonicalName(), e);
+            }
+        }
+
+        if (!generationErrors.isEmpty()) {
+            String errorDescription = String.format(
+                    "%s\n\n## Generation Errors\n\n%s",
+                    info.description,
+                    String.join("\n\n",
+                            generationErrors.entrySet().stream().map(entry -> {
+                                Throwable error = entry.getValue();
+                                return String.format("### %s\n**%s**: %s", entry.getKey(), error.getClass().getCanonicalName(), error.getMessage());
+                            }).toList())
+            );
+            return new OpenApiSpecBuilder(info.withDescription(errorDescription)).build();
+        }
 
         return specBuilder.build();
     }
 
     private static Info getInfo() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String timeNow = LocalDateTime.now().format(dateTimeFormatter);
+
         return Info.builder()
                 .title("DynAPI")
-                .description("Dynamic API for many Databases")
+                .summary("Dynamic API for many Databases")
+                .description(String.format("Generated: %s", timeNow))
                 .version("0.0.0")
                 .contact(Contact.builder()
                         .name("DynAPI")
