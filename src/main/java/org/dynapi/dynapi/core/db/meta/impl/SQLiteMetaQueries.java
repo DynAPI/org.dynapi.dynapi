@@ -20,22 +20,29 @@ public class SQLiteMetaQueries implements MetaQueryGenerator {
 
     @Override
     public String listTables() {
-        Table table = new Schema("main").table("sqlite_master");
+        return listTableOfSchema("main");
+    }
+
+    @Override
+    public String listTableOfSchema(String schemaName) {
+        Table table = new Schema(schemaName).table("sqlite_master");
         Field typeField = table.field("type");
         return SQLiteQuery
                 .from(table)
-                .select(new ValueWrapper("schemaname", "main"), new Field("tablename", "name", table))
+                .select(new ValueWrapper("schemaname", schemaName), new Field("tablename", "name", table))
                 .where(typeField.eq("table"))
                 .getSql();
     }
 
     @Override
-    public String listTableOfSchema(String schemaName) {
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
     public String listColumnsOfTable(String schemaName, String tableName) {
         throw new UnsupportedOperationException("Not implemented yet");
+//        return SQLiteQuery
+//                .from(new Function(null, "pragma_table_info", tableName))
+//                .select(
+//                        new Field("column_name", "name"),
+//                        new Field("type", "type")
+//                )
+//                .getSql();
     }
 }
