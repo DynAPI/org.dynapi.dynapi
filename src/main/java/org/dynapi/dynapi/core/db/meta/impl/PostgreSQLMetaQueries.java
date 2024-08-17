@@ -32,7 +32,7 @@ public class PostgreSQLMetaQueries implements MetaQueryGenerator {
     }
 
     @Override
-    public String listTableOfSchema(String ofSchemaName) {
+    public String listTablesOfSchema(String ofSchemaName) {
         Table pgTables = new Schema("pg_catalog").table("pg_tables");
         Field schemaName = pgTables.field("schemaname");
         Field tableName = pgTables.field("tablename");

@@ -45,7 +45,7 @@ public class Meta {
 
     @GetMapping(value = "/tables/{schema-name}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> tablesOfSchema(@PathVariable("schema-name") String schemaName) {
-        String sqlQuery = queries.listTableOfSchema(schemaName);
+        String sqlQuery = queries.listTablesOfSchema(schemaName);
         log.info(sqlQuery);
         List<Map<String, Object>> data = database.queryForList(sqlQuery);
         return ResponseEntity.ok(data);
