@@ -10,8 +10,8 @@ public class PostgreSQLMetaQueries implements MetaQueryGenerator {
     @Override
     public String listSchemas() {
         Table pgNamespace = new Schema("pg_catalog").table("pg_namespace");
-        Field schemaName = pgNamespace.field("nspname", "schemaname");
-        return PostgreSQLQuery
+        Field schemaName = pgNamespace.field("nspname").as("schemaname");
+        return new PostgreSQLQuery()
             .from(pgNamespace)
             .select(schemaName)
             .where(schemaName.not_like("pg_%"))
@@ -23,7 +23,7 @@ public class PostgreSQLMetaQueries implements MetaQueryGenerator {
         Table pgTables = new Schema("pg_catalog").table("pg_tables");
         Field schemaName = pgTables.field("schemaname");
         Field tableName = pgTables.field("tablename");
-        return PostgreSQLQuery
+        return new PostgreSQLQuery()
                 .from(pgTables)
                 .select(schemaName, tableName)
                 .where(schemaName.not_like("pg_%"))
@@ -36,7 +36,7 @@ public class PostgreSQLMetaQueries implements MetaQueryGenerator {
         Table pgTables = new Schema("pg_catalog").table("pg_tables");
         Field schemaName = pgTables.field("schemaname");
         Field tableName = pgTables.field("tablename");
-        return PostgreSQLQuery
+        return new PostgreSQLQuery()
                 .from(pgTables)
                 .select(schemaName, tableName)
                 .where(schemaName.not_like("pg_%"))
@@ -50,11 +50,11 @@ public class PostgreSQLMetaQueries implements MetaQueryGenerator {
         Table columns = new Schema("information_schema").table("columns");
         Field tableSchema = columns.field("table_schema");
         Field tableName = columns.field("table_name");
-        return PostgreSQLQuery
+        return new PostgreSQLQuery()
                 .from(columns)
                 .select(
-                        columns.field("column_name", "column_name"),
-                        columns.field("udt_name", "type")
+                        columns.field("column_name").as("column_name"),
+                        columns.field("udt_name").as("type")
                 )
                 .where(tableSchema.eq(schema).and(tableName.eq(table)))
                 .getSql();

@@ -13,8 +13,8 @@ public class SQLiteMetaQueries implements MetaQueryGenerator {
 
     @Override
     public String listSchemas() {
-        return SQLiteQuery
-                .select(List.of(new ValueWrapper("schemaname", "main")))
+        return new SQLiteQuery()
+                .select(List.of(new ValueWrapper("main").as("schemaname")))
                 .getSql();
     }
 
@@ -27,9 +27,9 @@ public class SQLiteMetaQueries implements MetaQueryGenerator {
     public String listTablesOfSchema(String schemaName) {
         Table table = new Schema(schemaName).table("sqlite_master");
         Field typeField = table.field("type");
-        return SQLiteQuery
+        return new SQLiteQuery()
                 .from(table)
-                .select(new ValueWrapper("schemaname", schemaName), new Field("tablename", "name", table))
+                .select(new ValueWrapper(schemaName).as("schemaname"), new Field("name", table).as("tablename"))
                 .where(typeField.eq("table"))
                 .getSql();
     }
