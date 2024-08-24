@@ -17,7 +17,9 @@ public class SQLiteMetaQueries implements MetaQueryGenerator {
         Selectable pragma = new TableValuedFunction("pragma_database_list");
         return new SQLiteQuery()
                 .from(pragma)
-                .select(pragma.field("name").as("schemaname"))
+                .select(
+                        pragma.field("name").as("schemaname")
+                )
                 .getSql();
     }
 
@@ -30,27 +32,31 @@ public class SQLiteMetaQueries implements MetaQueryGenerator {
                         table_list.field("schema").as("schemaname"),
                         table_list.field("name").as("tablename")
                 )
+                .where(table_list.field("name").not_like("sqlite_%"))
                 .getSql();
     }
 
     @Override
     public String listTablesOfSchema(String schemaName) {
         Table table = new Schema(schemaName).table("sqlite_master");
-        Field typeField = table.field("type");
         return new SQLiteQuery()
                 .from(table)
-                .select(new ValueWrapper(schemaName).as("schemaname"), new Field("name", table).as("tablename"))
-                .where(typeField.eq("table"))
+                .select(
+                        new ValueWrapper(schemaName).as("schemaname"),
+                        new Field("name", table).as("tablename")
+                )
+                .where(table.field("type").eq("table"))
                 .getSql();
     }
 
     @Override
     public String listColumnsOfTable(String schemaName, String tableName) {
+        Selectable tableInfo = new TableValuedFunction("pragma_table_info", tableName);
         return new SQLiteQuery()
-                .from(new TableValuedFunction("pragma_table_info", tableName))
+                .from(tableInfo)
                 .select(
-                        new Field("name").as("column_name"),
-                        new Field("type").as("type")
+                        tableInfo.field("name").as("column_name"),
+                        tableInfo.field("type").as("type")
                 )
                 .getSql();
     }
