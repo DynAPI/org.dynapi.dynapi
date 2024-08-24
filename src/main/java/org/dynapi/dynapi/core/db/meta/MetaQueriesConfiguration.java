@@ -8,23 +8,27 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @Slf4j
 @Configuration
 public class MetaQueriesConfiguration {
-    public static final Map<String, MetaQueryGenerator> registeredGenerator = new HashMap<>();
+    /**
+     * used by implementations of {@link MetaQueryGenerator} to get registered
+     */
+    public static final Map<String, Supplier<MetaQueryGenerator>> registeredGenerator = new HashMap<>();
 
     static {
-        registeredGenerator.put("postgresql", new PostgreSQLMetaQueries());
-        registeredGenerator.put("sqlite", new SQLiteMetaQueries());
+        registeredGenerator.put("postgresql", PostgreSQLMetaQueries::new);
+        registeredGenerator.put("sqlite", SQLiteMetaQueries::new);
     }
 
     @Bean
     public MetaQueryGenerator metaQueryGenerator() {
         String dialect = System.getProperty("dynapi.dialect");
-        MetaQueryGenerator metaQueryGenerator = registeredGenerator.getOrDefault(dialect, null);
-        if (metaQueryGenerator == null)
+        Supplier<MetaQueryGenerator> newMetaQueryGenerator = registeredGenerator.getOrDefault(dialect, null);
+        if (newMetaQueryGenerator == null)
             throw new RuntimeException("Unknown dialect: " + dialect);
-        return metaQueryGenerator;
+        return newMetaQueryGenerator.get();
     }
 }
