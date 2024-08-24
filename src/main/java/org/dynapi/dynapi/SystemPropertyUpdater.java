@@ -1,7 +1,9 @@
 package org.dynapi.dynapi;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dynapi.dynapi.core.config.DynAPIConfiguration;
 
+@Slf4j
 public class SystemPropertyUpdater {
     public static void updateProperties(DynAPIConfiguration configuration) {
         if ((configuration.isDevelopmentDebug())) {
@@ -28,14 +30,17 @@ public class SystemPropertyUpdater {
     }
 
     private static void updateDatabase(DynAPIConfiguration.DatabaseConfiguration configuration) {
-        StringBuilder dataSource = new StringBuilder("jdbc:");
-        dataSource.append(configuration.getDialect()).append("://");
-        dataSource.append(configuration.getHost());
-        if (configuration.getPort() != null)
-            dataSource.append(":").append(configuration.getPort());
-        if (configuration.getDatabase() != null)
-            dataSource.append("/").append(configuration.getDatabase());
-        System.setProperty("spring.datasource.url", dataSource.toString());
+        String url = configuration.getUrl();
+        System.setProperty("spring.datasource.url", url);
+
+        String dialect = configuration.getDialect();
+        if (dialect == null) {  // auto-detection of dialect base on the url
+            // 'jdbc:{dialect}:{...}'
+            int firstColon = url.indexOf(':');
+            int secondColon = url.indexOf(':', firstColon + 1);
+            dialect = url.substring(firstColon + 1, secondColon);
+        }
+        System.setProperty("dynapi.dialect", dialect);
 
         if (configuration.getUsername() != null)
             System.setProperty("spring.datasource.username", configuration.getUsername());
