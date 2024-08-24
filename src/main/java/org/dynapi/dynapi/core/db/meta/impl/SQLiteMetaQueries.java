@@ -5,6 +5,7 @@ import org.dynapi.squirtle.core.dialects.sqlite.SQLiteQuery;
 import org.dynapi.squirtle.core.queries.Schema;
 import org.dynapi.squirtle.core.queries.Table;
 import org.dynapi.squirtle.core.terms.criterion.Field;
+import org.dynapi.squirtle.core.terms.functions.TableValuedFunction;
 import org.dynapi.squirtle.core.terms.values.ValueWrapper;
 
 import java.util.List;
@@ -36,13 +37,12 @@ public class SQLiteMetaQueries implements MetaQueryGenerator {
 
     @Override
     public String listColumnsOfTable(String schemaName, String tableName) {
-        throw new UnsupportedOperationException("Not implemented yet");
-//        return SQLiteQuery
-//                .from(new Function(null, "pragma_table_info", tableName))
-//                .select(
-//                        new Field("column_name", "name"),
-//                        new Field("type", "type")
-//                )
-//                .getSql();
+        return new SQLiteQuery()
+                .from(new TableValuedFunction("pragma_table_info", tableName))
+                .select(
+                        new Field("name").as("column_name"),
+                        new Field("type").as("type")
+                )
+                .getSql();
     }
 }
