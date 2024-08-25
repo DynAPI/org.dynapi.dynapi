@@ -25,9 +25,12 @@ import java.io.InputStream;
 public class Home {
     private DynAPIConfiguration configuration;
 
-    @GetMapping(value = "/", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> index() {
-        return ResponseEntity.ok("Hello World");
+    @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
+    public ResponseEntity<?> index() {
+        InputStream stream = getClass().getResourceAsStream("/static/html/home.html");
+        if (stream == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to load home.html");
+        return ResponseEntity.ok(new InputStreamResource(stream));
     }
 
     @GetMapping(value = "/configuration", produces = MediaType.APPLICATION_JSON_VALUE)
