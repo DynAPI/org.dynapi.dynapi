@@ -27,10 +27,7 @@ public class Home {
 
     @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<?> index() {
-        InputStream stream = getClass().getResourceAsStream("/static/html/home.html");
-        if (stream == null)
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to load home.html");
-        return ResponseEntity.ok(new InputStreamResource(stream));
+        return fileAsResponse("/static/html/home.html");
     }
 
     @GetMapping(value = "/configuration", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,17 +39,21 @@ public class Home {
 
     @GetMapping(value = "/redoc", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<?> redoc() {
-        InputStream stream = getClass().getResourceAsStream("/static/html/redoc.html");
-        if (stream == null)
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to load redoc.html");
-        return ResponseEntity.ok(new InputStreamResource(stream));
+        return fileAsResponse("/static/html/redoc.html");
     }
 
     @GetMapping(value = "/swagger", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<?> swagger() {
-        InputStream stream = getClass().getResourceAsStream("/static/html/swagger.html");
-        if (stream == null)
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to load swagger.html");
+        return fileAsResponse("/static/html/swagger.html");
+
+    }
+
+    private ResponseEntity<?> fileAsResponse(String path) {
+        InputStream stream = getClass().getResourceAsStream(path);
+        if (stream == null) {
+            String name = path.substring(path.lastIndexOf('/') + 1);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to load " + name);
+        }
         return ResponseEntity.ok(new InputStreamResource(stream));
     }
 }
