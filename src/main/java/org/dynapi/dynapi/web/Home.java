@@ -27,7 +27,7 @@ public class Home {
 
     @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<?> index() {
-        return fileAsResponse("/static/html/home.html");
+        return fileAsResponse("/html/home.html");
     }
 
     @GetMapping(value = "/configuration", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,12 +39,12 @@ public class Home {
 
     @GetMapping(value = "/redoc", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<?> redoc() {
-        return fileAsResponse("/static/html/redoc.html");
+        return fileAsResponse("/html/redoc.html");
     }
 
     @GetMapping(value = "/swagger", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<?> swagger() {
-        return fileAsResponse("/static/html/swagger.html");
+        return fileAsResponse("/html/swagger.html");
 
     }
 
