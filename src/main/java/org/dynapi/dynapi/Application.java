@@ -13,8 +13,7 @@ import java.util.List;
 @Configuration
 @SpringBootApplication
 public class Application {
-    // somehow we have to create an instance here. otherwise it won't build
-    private static DynAPIConfiguration configuration = new DynAPIConfiguration();
+    private static DynAPIConfiguration configuration = null;
 
     public static void main(String[] args) {
         List<String> argList = List.of(args);
