@@ -12,11 +12,11 @@ public class QueryConfig {
     /**
      * maximum amount to query (for pagination)
      */
-    private Long limit = null;
+    private Integer limit = null;
     /**
      * offset for pagination
      */
-    private Long offset = null;
+    private Integer offset = null;
     /**
      * controls the order by
      */
