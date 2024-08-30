@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * query endpoint for the data
@@ -63,7 +64,7 @@ public class Api {
         String sqlQuery = queryBuilder.getSql();
         log.info(sqlQuery);
 
-        List<Map<String, Object>> entries = jdbcTemplate.queryForList(sqlQuery);
+        Stream<Map<String, Object>> entries = jdbcTemplate.queryForStream(sqlQuery, new ColumnMapRowMapper());
         return ResponseEntity.ok(entries);
     }
 
