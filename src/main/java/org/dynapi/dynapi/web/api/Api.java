@@ -14,6 +14,7 @@ import org.dynapi.squirtle.core.queries.Table;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -40,16 +41,7 @@ public class Api {
     public ResponseEntity<?> getAll(HttpServletRequest request, @PathVariable("schema") String schemaName, @PathVariable("table") String tableName) {
         QueryConfig queryConfig = QueryConfigParser.parse(request);
 
-        final String columnInfoQuery = metaQueries.listColumnsOfTable(schemaName, tableName);
-        List<Map<String, Object>> tableColumnsInfos = jdbcTemplate.queryForList(columnInfoQuery);
-        List<String> tableColumnNames = tableColumnsInfos.stream().map(info -> (String) info.get("column_name")).toList();
-
-        List<String> queryColumns = List.of(queryConfig.getColumns());
-        if (!queryColumns.contains("*")) {
-            Set<String> unknownColumns = SetUtils.difference(new HashSet<>(queryColumns), new HashSet<>(tableColumnNames));
-            if (!unknownColumns.isEmpty())
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown table columns: " + String.join(", ", unknownColumns));
-        }
+        validateColumnAgainstTable(queryConfig.getColumns(), schemaName, tableName);
 
         Schema schema = new Schema(schemaName);
         Table table = schema.table(tableName);
@@ -70,16 +62,41 @@ public class Api {
         String sqlQuery = queryBuilder.getSql();
         log.info(sqlQuery);
 
-        List<Map<String, Object>> data = jdbcTemplate.queryForList(sqlQuery);
-        return ResponseEntity.ok(data);
+        List<Map<String, Object>> entries = jdbcTemplate.queryForList(sqlQuery);
+        return ResponseEntity.ok(entries);
     }
 
     /**
      * fetches exactly one entry or throws `404 Not Found`
      */
     @GetMapping(value = "/{schema}/{table}/one", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getOne(HttpServletRequest request, @PathVariable String schema, @PathVariable String table) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> getOne(HttpServletRequest request, @PathVariable("schema") String schemaName, @PathVariable("table") String tableName) {
+        QueryConfig queryConfig = QueryConfigParser.parse(request);
+
+        validateColumnAgainstTable(queryConfig.getColumns(), schemaName, tableName);
+
+        Schema schema = new Schema(schemaName);
+        Table table = schema.table(tableName);
+        QueryBuilder queryBuilder = query
+                .from(table)
+                .select((Object[]) queryConfig.getColumns())
+                .limit(1);
+
+        if (queryConfig.getOffset() != null)
+            queryBuilder.offset(queryConfig.getOffset());
+
+        if (queryConfig.getOrderBy() != null) {
+            for (QueryConfig.OrderBy orderBy : queryConfig.getOrderBy())
+                queryBuilder.orderBy(new QueryBuilder.OrderByEntry(table.field(orderBy.column()), orderBy.order()));
+        }
+
+        String sqlQuery = queryBuilder.getSql();
+        log.info(sqlQuery);
+
+        Map<String, Object> entry = jdbcTemplate.queryForObject(sqlQuery, new ColumnMapRowMapper());
+        if (entry == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No entry found");
+        return ResponseEntity.ok(entry);
     }
 
     /**
@@ -112,5 +129,18 @@ public class Api {
     @DeleteMapping(value = "/{schema}/{table}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> delete(HttpServletRequest request, @PathVariable String schema, @PathVariable String table) {
         return ResponseEntity.ok().build();
+    }
+
+    private void validateColumnAgainstTable(String[] columns, String schemaName, String tableName) {
+        final String columnInfoQuery = metaQueries.listColumnsOfTable(schemaName, tableName);
+        List<Map<String, Object>> tableColumnsInfos = jdbcTemplate.queryForList(columnInfoQuery);
+        List<String> tableColumnNames = tableColumnsInfos.stream().map(info -> (String) info.get("column_name")).toList();
+
+        List<String> queryColumns = List.of(columns);
+        if (!queryColumns.contains("*")) {
+            Set<String> unknownColumns = SetUtils.difference(new HashSet<>(queryColumns), new HashSet<>(tableColumnNames));
+            if (!unknownColumns.isEmpty())
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown table columns: " + String.join(", ", unknownColumns));
+        }
     }
 }
