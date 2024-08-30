@@ -105,7 +105,7 @@ public class Api {
      * fetches exactly one entry by the ROWID or throws `404 Not Found`
      */
     @GetMapping(value = "/{schema}/{table}/{rowid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getOne(HttpServletRequest request, @PathVariable("schema") String schemaName, @PathVariable("table") String tableName, @PathVariable("rowid") long rowid) {
+    public ResponseEntity<?> getOneByRowId(HttpServletRequest request, @PathVariable("schema") String schemaName, @PathVariable("table") String tableName, @PathVariable("rowid") long rowid) {
         QueryConfig queryConfig = QueryConfigParser.parse(request);
 
         validateColumnAgainstTable(queryConfig.getColumns(), schemaName, tableName);
