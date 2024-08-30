@@ -7,6 +7,7 @@ import org.dynapi.common.utils.SetUtils;
 import org.dynapi.dynapi.core.db.meta.MetaQueryGenerator;
 import org.dynapi.dynapi.core.query.QueryConfig;
 import org.dynapi.dynapi.core.query.QueryConfigParser;
+import org.dynapi.squirtle.core.PseudoColumns;
 import org.dynapi.squirtle.core.queries.Query;
 import org.dynapi.squirtle.core.queries.QueryBuilder;
 import org.dynapi.squirtle.core.queries.Schema;
@@ -96,6 +97,32 @@ public class Api {
         Map<String, Object> entry = jdbcTemplate.queryForObject(sqlQuery, new ColumnMapRowMapper());
         if (entry == null)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No entry found");
+        return ResponseEntity.ok(entry);
+    }
+
+    /**
+     * fetches exactly one entry by the ROWID or throws `404 Not Found`
+     */
+    @GetMapping(value = "/{schema}/{table}/{rowid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getOne(HttpServletRequest request, @PathVariable("schema") String schemaName, @PathVariable("table") String tableName, @PathVariable("rowid") long rowid) {
+        QueryConfig queryConfig = QueryConfigParser.parse(request);
+
+        validateColumnAgainstTable(queryConfig.getColumns(), schemaName, tableName);
+
+        Schema schema = new Schema(schemaName);
+        Table table = schema.table(tableName);
+        QueryBuilder queryBuilder = query
+                .from(table)
+                .select((Object[]) queryConfig.getColumns())
+                .where(PseudoColumns.RowID.eq(rowid))
+                .limit(1);
+
+        String sqlQuery = queryBuilder.getSql();
+        log.info(sqlQuery);
+
+        Map<String, Object> entry = jdbcTemplate.queryForObject(sqlQuery, new ColumnMapRowMapper());
+        if (entry == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No entry found with ROWID=" + rowid);
         return ResponseEntity.ok(entry);
     }
 
