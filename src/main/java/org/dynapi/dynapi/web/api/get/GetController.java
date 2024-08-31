@@ -1,9 +1,10 @@
-package org.dynapi.dynapi.web.api;
+package org.dynapi.dynapi.web.api.get;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dynapi.common.utils.SetUtils;
+import org.dynapi.dynapi.core.db.DatabaseUtil;
 import org.dynapi.dynapi.core.db.meta.MetaQueryGenerator;
 import org.dynapi.dynapi.core.query.QueryConfig;
 import org.dynapi.dynapi.core.query.QueryConfigParser;
@@ -17,22 +18,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
+import java.util.Map;
 import java.util.stream.Stream;
 
-/**
- * query endpoint for the data
- */
 @Slf4j
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api")
-public class Api {
+public class GetController {
     private final Query query;
-    private final MetaQueryGenerator metaQueries;
+    private final DatabaseUtil databaseUtil;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -43,7 +44,7 @@ public class Api {
     public ResponseEntity<?> getAll(HttpServletRequest request, @PathVariable("schema") String schemaName, @PathVariable("table") String tableName) {
         QueryConfig queryConfig = QueryConfigParser.parse(request);
 
-        validateColumnAgainstTable(queryConfig.getColumns(), schemaName, tableName);
+        databaseUtil.validateColumnAgainstTable(queryConfig.getColumns(), schemaName, tableName);
 
         Schema schema = new Schema(schemaName);
         Table table = schema.table(tableName);
@@ -75,7 +76,7 @@ public class Api {
     public ResponseEntity<?> getOne(HttpServletRequest request, @PathVariable("schema") String schemaName, @PathVariable("table") String tableName) {
         QueryConfig queryConfig = QueryConfigParser.parse(request);
 
-        validateColumnAgainstTable(queryConfig.getColumns(), schemaName, tableName);
+        databaseUtil.validateColumnAgainstTable(queryConfig.getColumns(), schemaName, tableName);
 
         Schema schema = new Schema(schemaName);
         Table table = schema.table(tableName);
@@ -108,7 +109,7 @@ public class Api {
     public ResponseEntity<?> getOneByRowId(HttpServletRequest request, @PathVariable("schema") String schemaName, @PathVariable("table") String tableName, @PathVariable("rowid") long rowid) {
         QueryConfig queryConfig = QueryConfigParser.parse(request);
 
-        validateColumnAgainstTable(queryConfig.getColumns(), schemaName, tableName);
+        databaseUtil.validateColumnAgainstTable(queryConfig.getColumns(), schemaName, tableName);
 
         Schema schema = new Schema(schemaName);
         Table table = schema.table(tableName);
@@ -125,50 +126,5 @@ public class Api {
         if (entry == null)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No entry found with ROWID=" + rowid);
         return ResponseEntity.ok(entry);
-    }
-
-    /**
-     * adds one or more entries
-     */
-    @PostMapping(value = "/{schema}/{table}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> post(HttpServletRequest request, @PathVariable String schema, @PathVariable String table) {
-        return ResponseEntity.ok().build();
-    }
-
-    /**
-     * replaces all matching with the passed entry
-     */
-    @PutMapping(value = "/{schema}/{table}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> put(HttpServletRequest request, @PathVariable String schema, @PathVariable String table) {
-        return ResponseEntity.ok().build();
-    }
-
-    /**
-     * partially modifies a resource
-     */
-    @PatchMapping(value = "/{schema}/{table}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> patch(HttpServletRequest request, @PathVariable String schema, @PathVariable String table) {
-        return ResponseEntity.ok().build();
-    }
-
-    /**
-     * deletes one or more entries
-     */
-    @DeleteMapping(value = "/{schema}/{table}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> delete(HttpServletRequest request, @PathVariable String schema, @PathVariable String table) {
-        return ResponseEntity.ok().build();
-    }
-
-    private void validateColumnAgainstTable(String[] columns, String schemaName, String tableName) {
-        final String columnInfoQuery = metaQueries.listColumnsOfTable(schemaName, tableName);
-        List<Map<String, Object>> tableColumnsInfos = jdbcTemplate.queryForList(columnInfoQuery);
-        List<String> tableColumnNames = tableColumnsInfos.stream().map(info -> (String) info.get("column_name")).toList();
-
-        List<String> queryColumns = List.of(columns);
-        if (!queryColumns.contains("*")) {
-            Set<String> unknownColumns = SetUtils.difference(new HashSet<>(queryColumns), new HashSet<>(tableColumnNames));
-            if (!unknownColumns.isEmpty())
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown table columns: " + String.join(", ", unknownColumns));
-        }
     }
 }
