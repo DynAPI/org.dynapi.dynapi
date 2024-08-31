@@ -3,6 +3,7 @@ package org.dynapi.dynapi.web;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dynapi.dynapi.core.config.DynAPIConfiguration;
+import org.dynapi.dynapi.core.openapi.OpenApiManager;
 import org.json.JSONObject;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,12 @@ public class Home {
     public ResponseEntity<?> swagger() {
         return fileAsResponse("/html/swagger.html");
 
+    }
+
+    @GetMapping(value = "/openapi", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getOpenApi() {
+        String spec = OpenApiManager.generateOpenAPISpecification().toString();
+        return ResponseEntity.ok(spec);
     }
 
     private ResponseEntity<?> fileAsResponse(String path) {
