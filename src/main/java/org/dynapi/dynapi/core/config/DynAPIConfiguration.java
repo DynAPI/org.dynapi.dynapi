@@ -1,11 +1,12 @@
 package org.dynapi.dynapi.core.config;
 
-import lombok.*;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.dynapi.jsonschema.gen.JsonSchemaGenerator;
+import org.dynapi.jsonschema.gen.annotations.*;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
-import org.dynapi.jsonschema.gen.annotations.*;
-import org.dynapi.jsonschema.gen.JsonSchemaGenerator;
 
 import java.io.*;
 

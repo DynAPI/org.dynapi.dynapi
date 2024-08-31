@@ -6,15 +6,14 @@ import org.dynapi.dynapi.core.db.meta.MetaQueryGenerator;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
 
-/**
- * meta information about the database.
- * like available databases, schemas, tables and columns
- */
 @Slf4j
 @AllArgsConstructor
 @RestController

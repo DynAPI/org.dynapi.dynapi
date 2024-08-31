@@ -16,9 +16,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.InputStream;
 
-/**
- * homepage and other usable html pages
- */
 @Slf4j
 @AllArgsConstructor
 @RestController

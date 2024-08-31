@@ -14,8 +14,10 @@ import org.dynapi.openapispec.core.objects.Tag;
 import org.dynapi.openapispec.core.types.TArray;
 import org.dynapi.openapispec.core.types.TObject;
 import org.dynapi.openapispec.core.types.TString;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class MetaOpenApiProvider implements OpenApiProvider {
 
     @PostConstruct
