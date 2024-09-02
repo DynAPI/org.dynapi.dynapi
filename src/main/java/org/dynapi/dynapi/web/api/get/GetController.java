@@ -39,7 +39,7 @@ public class GetController {
      * fetches a list of entries
      */
     @GetMapping(value = "/{schema}/{table}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAll(HttpServletRequest request, @PathVariable("schema") String schemaName, @PathVariable("table") String tableName) {
+    public ResponseEntity<?> getMultiple(HttpServletRequest request, @PathVariable("schema") String schemaName, @PathVariable("table") String tableName) {
         QueryConfig queryConfig = QueryConfigParser.parse(request);
 
         databaseUtil.validateColumnAgainstTable(queryConfig.getColumns(), schemaName, tableName);

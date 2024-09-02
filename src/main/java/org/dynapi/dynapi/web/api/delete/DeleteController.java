@@ -19,7 +19,15 @@ public class DeleteController {
      * deletes one or more entries
      */
     @DeleteMapping(value = "/{schema}/{table}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> delete(HttpServletRequest request, @PathVariable String schema, @PathVariable String table) {
+    public ResponseEntity<?> deleteMultiple(HttpServletRequest request, @PathVariable("schema") String schemaName, @PathVariable("table") String tableName) {
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * deletes one or more entries
+     */
+    @DeleteMapping(value = "/{schema}/{table}/{rowid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> deleteByRowId(HttpServletRequest request, @PathVariable("schema") String schemaName, @PathVariable("table") String tableName, @PathVariable("rowid") long rowid) {
         return ResponseEntity.ok().build();
     }
 }
