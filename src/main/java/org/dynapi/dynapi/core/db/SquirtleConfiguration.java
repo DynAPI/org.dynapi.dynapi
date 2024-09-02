@@ -2,8 +2,8 @@ package org.dynapi.dynapi.core.db;
 
 import lombok.extern.slf4j.Slf4j;
 import org.dynapi.dynapi.core.db.meta.MetaQueryGenerator;
-import org.dynapi.dynapi.core.db.meta.impl.PostgreSQLMetaQueries;
-import org.dynapi.dynapi.core.db.meta.impl.SQLiteMetaQueries;
+import org.dynapi.dynapi.core.db.meta.impl.PostgreSQLMetaQueryGenerator;
+import org.dynapi.dynapi.core.db.meta.impl.SQLiteMetaQueryGenerator;
 import org.dynapi.squirtle.core.dialects.clickhouse.ClickHouseQuery;
 import org.dynapi.squirtle.core.dialects.mssql.MSSQLQuery;
 import org.dynapi.squirtle.core.dialects.mysql.MySQLQuery;
@@ -29,8 +29,8 @@ public class SquirtleConfiguration {
     public static final Map<String, Supplier<MetaQueryGenerator>> registeredMetaGenerators = new HashMap<>();
 
     static {
-        registeredMetaGenerators.put("postgresql", PostgreSQLMetaQueries::new);
-        registeredMetaGenerators.put("sqlite", SQLiteMetaQueries::new);
+        registeredMetaGenerators.put("postgresql", PostgreSQLMetaQueryGenerator::new);
+        registeredMetaGenerators.put("sqlite", SQLiteMetaQueryGenerator::new);
     }
 
     public static final Map<String, Supplier<Query>> registeredQueryClasses = new HashMap<>();
