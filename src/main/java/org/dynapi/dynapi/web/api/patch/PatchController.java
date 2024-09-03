@@ -19,7 +19,11 @@ public class PatchController {
      * partially modifies a resource
      */
     @PatchMapping(value = "/{schema}/{table}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> patchMultiple(HttpServletRequest request, @PathVariable String schema, @PathVariable String table) {
+    public ResponseEntity<?> patchMultiple(
+            HttpServletRequest request,
+            @PathVariable("schema") String schemaName,
+            @PathVariable("table") String tableName
+    ) {
         return ResponseEntity.ok().build();
     }
 
@@ -27,7 +31,12 @@ public class PatchController {
      * partially modifies a resource
      */
     @PatchMapping(value = "/{schema}/{table}/{rowid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> patchByRowId(HttpServletRequest request, @PathVariable String schema, @PathVariable String table, @PathVariable("rowid") long rowid) {
+    public ResponseEntity<?> patchByRowId(
+            HttpServletRequest request,
+            @PathVariable String schema,
+            @PathVariable String table,
+            @PathVariable("rowid") long rowid
+    ) {
         return ResponseEntity.ok().build();
     }
 }

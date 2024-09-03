@@ -15,11 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class OpenApiManager {
-    protected static List<OpenApiProvider> providers = new ArrayList<>();
-
-    public static void addProvider(OpenApiProvider provider) {
-        providers.add(provider);
-    }
+    public static List<OpenApiProvider> providers = new ArrayList<>();
 
     public static JSONObject generateOpenAPISpecification() {
         Info info = getInfo();

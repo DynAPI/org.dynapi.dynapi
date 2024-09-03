@@ -40,7 +40,9 @@ public class MetaController {
     }
 
     @GetMapping(value = "/tables/{schema-name}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> tablesOfSchema(@PathVariable("schema-name") String schemaName) {
+    public ResponseEntity<?> tablesOfSchema(
+            @PathVariable("schema-name") String schemaName
+    ) {
         String sqlQuery = queries.listTablesOfSchema(schemaName);
         log.info(sqlQuery);
         List<Map<String, Object>> data = database.queryForList(sqlQuery);
@@ -48,7 +50,10 @@ public class MetaController {
     }
 
     @GetMapping(value = "/columns/{schema-name}/{table-name}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> columns(@PathVariable("schema-name") String schemaName, @PathVariable("table-name") String tableName) {
+    public ResponseEntity<?> columns(
+            @PathVariable("schema-name") String schemaName,
+            @PathVariable("table-name") String tableName
+    ) {
         String sqlQuery = queries.listColumnsOfTable(schemaName, tableName);
         log.info(sqlQuery);
         List<Map<String, Object>> data = database.queryForList(sqlQuery);

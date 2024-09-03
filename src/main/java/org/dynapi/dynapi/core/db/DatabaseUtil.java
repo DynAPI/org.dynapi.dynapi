@@ -26,7 +26,10 @@ public class DatabaseUtil {
         final String columnInfoQuery = metaQueries.listColumnsOfTable(schemaName, tableName);
         log.info(columnInfoQuery);
         List<Map<String, Object>> tableColumnsInfos = jdbcTemplate.queryForList(columnInfoQuery);
-        List<String> tableColumnNames = tableColumnsInfos.stream().map(info -> (String) info.get("column_name")).toList();
+        List<String> tableColumnNames = tableColumnsInfos
+                .stream()
+                .map(info -> (String) info.get("column_name"))
+                .toList();
 
         List<String> queryColumns = List.of(columns);
         if (!queryColumns.contains("*")) {

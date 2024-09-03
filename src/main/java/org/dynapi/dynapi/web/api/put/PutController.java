@@ -19,7 +19,11 @@ public class PutController {
      * replaces all matching with the passed entry
      */
     @PutMapping(value = "/{schema}/{table}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> putMultiple(HttpServletRequest request, @PathVariable String schema, @PathVariable String table) {
+    public ResponseEntity<?> putMultiple(
+            HttpServletRequest request,
+            @PathVariable String schema,
+            @PathVariable String table
+    ) {
         return ResponseEntity.ok().build();
     }
 
@@ -27,7 +31,12 @@ public class PutController {
      * replaces all matching with the passed entry
      */
     @PutMapping(value = "/{schema}/{table}/{rowid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> putByRowId(HttpServletRequest request, @PathVariable String schema, @PathVariable String table, @PathVariable("rowid") long rowid) {
+    public ResponseEntity<?> putByRowId(
+            HttpServletRequest request,
+            @PathVariable String schema,
+            @PathVariable String table,
+            @PathVariable("rowid") long rowid
+    ) {
         return ResponseEntity.ok().build();
     }
 }

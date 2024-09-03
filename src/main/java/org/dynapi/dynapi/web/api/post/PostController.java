@@ -19,7 +19,11 @@ public class PostController {
      * adds one or more entries
      */
     @PostMapping(value = "/{schema}/{table}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> postMultiple(HttpServletRequest request, @PathVariable String schema, @PathVariable String table) {
+    public ResponseEntity<?> postMultiple(
+            HttpServletRequest request,
+            @PathVariable String schema,
+            @PathVariable String table
+    ) {
         return ResponseEntity.ok().build();
     }
 }

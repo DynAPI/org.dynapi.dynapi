@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class PutOpenApiProvider implements OpenApiProvider {
     @PostConstruct
     public void init() {
-        OpenApiManager.addProvider(this);
+        OpenApiManager.providers.add(this);
     }
 
     @Override

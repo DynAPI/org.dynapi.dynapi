@@ -8,7 +8,7 @@ public class SystemPropertyUpdater {
     public static void updateProperties(DynAPIConfiguration configuration) {
         if ((configuration.isDebug())) {
             System.setProperty("debug", "true");
-            System.setProperty("logging.level.root", "debug");
+//            System.setProperty("logging.level.root", "debug");
         }
 
         updateServer(configuration.getServer());
