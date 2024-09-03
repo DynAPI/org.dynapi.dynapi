@@ -6,7 +6,7 @@ import org.dynapi.squirtle.core.queries.Schema;
 import org.dynapi.squirtle.core.queries.Table;
 import org.dynapi.squirtle.core.terms.criterion.Field;
 
-public class PostgreSQLMetaQueries implements MetaQueryGenerator {
+public class PostgreSQLMetaQueryGenerator implements MetaQueryGenerator {
     @Override
     public String listSchemas() {
         Table pgNamespace = new Schema("pg_catalog").table("pg_namespace");

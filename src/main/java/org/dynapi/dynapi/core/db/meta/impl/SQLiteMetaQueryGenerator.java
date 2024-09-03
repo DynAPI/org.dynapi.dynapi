@@ -9,7 +9,7 @@ import org.dynapi.squirtle.core.terms.criterion.Field;
 import org.dynapi.squirtle.core.terms.functions.TableValuedFunction;
 import org.dynapi.squirtle.core.terms.values.ValueWrapper;
 
-public class SQLiteMetaQueries implements MetaQueryGenerator {
+public class SQLiteMetaQueryGenerator implements MetaQueryGenerator {
 
     @Override
     public String listSchemas() {

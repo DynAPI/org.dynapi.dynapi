@@ -3,6 +3,7 @@ package org.dynapi.dynapi.web;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dynapi.dynapi.core.config.DynAPIConfiguration;
+import org.dynapi.dynapi.core.openapi.OpenApiManager;
 import org.json.JSONObject;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -15,9 +16,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.InputStream;
 
-/**
- * homepage and other usable html pages
- */
 @Slf4j
 @AllArgsConstructor
 @RestController
@@ -30,22 +28,27 @@ public class Home {
         return fileAsResponse("/html/home.html");
     }
 
-    @GetMapping(value = "/configuration", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> debug() {
-        if (!configuration.isDebug())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        return ResponseEntity.ok(new JSONObject(configuration).toString());
-    }
-
     @GetMapping(value = "/redoc", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<?> redoc() {
+        if (!configuration.getWeb().isRedoc())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         return fileAsResponse("/html/redoc.html");
     }
 
     @GetMapping(value = "/swagger", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<?> swagger() {
+        if (!configuration.getWeb().isSwagger())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         return fileAsResponse("/html/swagger.html");
+    }
 
+    @GetMapping(value = "/openapi", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getOpenApi() {
+        if (!configuration.getWeb().isOpenapi())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        String spec = OpenApiManager.generateOpenAPISpecification().toString();
+        return ResponseEntity.ok(spec);
     }
 
     private ResponseEntity<?> fileAsResponse(String path) {

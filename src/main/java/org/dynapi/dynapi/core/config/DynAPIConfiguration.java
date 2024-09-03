@@ -1,11 +1,12 @@
 package org.dynapi.dynapi.core.config;
 
-import lombok.*;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.dynapi.jsonschema.gen.JsonSchemaGenerator;
+import org.dynapi.jsonschema.gen.annotations.*;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
-import org.dynapi.jsonschema.gen.annotations.*;
-import org.dynapi.jsonschema.gen.JsonSchemaGenerator;
 
 import java.io.*;
 
@@ -15,12 +16,12 @@ import java.io.*;
 public class DynAPIConfiguration {
     @Description("Enable additional debug information.\nWarning: This may disclose sensible information")
     private boolean debug = false;
-    @Hidden
-    private boolean developmentDebug = false;
     @Description("Configuration for the HTTP-server")
     private ServerConfiguration server = new ServerConfiguration();
     @Description("Configuration for the features of the webpages")
     private WebConfiguration web = new WebConfiguration();
+    @Description("Everything related to how he api endpoints should behave")
+    private ApiConfiguration api = new ApiConfiguration();
     @Description("Configuration for the database connection")
     private DatabaseConfiguration database = new DatabaseConfiguration();
 
@@ -52,6 +53,15 @@ public class DynAPIConfiguration {
         @Description("Base-URL of the server")
         @Constraints(pattern = "^/.*")
         private String baseurl = "/";
+    }
+
+    @Data
+    @RequiredArgsConstructor
+    public static class ApiConfiguration {
+        @Description("(possibly) large response are streamed to the client to reduce memory usage on the server." +
+                "If the request is enormous or the connection is slow it will be canceled. " +
+                "This option configures the maximum timeout for such requests.")
+        private Integer streamingResponseTimeout = null;
     }
 
     @Data

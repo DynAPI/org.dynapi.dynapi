@@ -14,12 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OpenAPIManager {
-    protected static List<OpenAPIProvider> providers = new ArrayList<>();
-
-    public static void addProvider(OpenAPIProvider provider) {
-        providers.add(provider);
-    }
+public class OpenApiManager {
+    public static List<OpenApiProvider> providers = new ArrayList<>();
 
     public static JSONObject generateOpenAPISpecification() {
         Info info = getInfo();
@@ -34,7 +30,7 @@ public class OpenAPIManager {
 
         Map<String, Throwable> generationErrors = new HashMap<>();
 
-        for (OpenAPIProvider provider : providers) {
+        for (OpenApiProvider provider : providers) {
             try {
                 provider.generateOpenAPISpecification(specBuilder);
             } catch (Throwable e) {
