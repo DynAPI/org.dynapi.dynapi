@@ -4,10 +4,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dynapi.dynapi.core.database.interfaces.Database;
+import org.dynapi.dynapi.core.query.QueryConfig;
+import org.dynapi.dynapi.core.query.QueryConfigParser;
 import org.dynapi.squirtle.core.PseudoColumns;
 import org.dynapi.squirtle.core.queries.QueryBuilder;
 import org.dynapi.squirtle.core.queries.Schema;
 import org.dynapi.squirtle.core.queries.Table;
+import org.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,7 +36,35 @@ public class DeleteController {
             @PathVariable("schema") String schemaName,
             @PathVariable("table") String tableName
     ) {
-        return ResponseEntity.ok().build();
+        QueryConfig queryConfig = QueryConfigParser.parse(request);
+
+        Schema schema = new Schema(schemaName);
+        Table table = schema.table(tableName);
+        QueryBuilder queryBuilder = database.newQuery()
+                .from(table)
+                .delete();
+
+        // todo: where
+
+        if (queryConfig.getLimit() != null)
+            queryBuilder.limit(queryConfig.getLimit());
+
+        if (queryConfig.getOffset() != null)
+            queryBuilder.offset(queryConfig.getOffset());
+
+        if (queryConfig.getOrderBy() != null) {
+            for (QueryConfig.OrderBy orderBy : queryConfig.getOrderBy())
+                queryBuilder.orderBy(new QueryBuilder.OrderByEntry(table.field(orderBy.column()), orderBy.order()));
+        }
+
+        String sql = queryBuilder.getSql();
+        log.info(sql);
+
+        int affected = jdbcTemplate.update(sql);
+        String responseContent = new JSONObject()
+                .put("affected", affected)
+                .toString();
+        return ResponseEntity.ok(responseContent);
     }
 
     /**
