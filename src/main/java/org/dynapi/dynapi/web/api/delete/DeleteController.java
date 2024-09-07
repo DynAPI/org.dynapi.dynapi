@@ -11,6 +11,7 @@ import org.dynapi.squirtle.core.queries.QueryBuilder;
 import org.dynapi.squirtle.core.queries.Schema;
 import org.dynapi.squirtle.core.queries.Table;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @AllArgsConstructor
@@ -87,7 +89,9 @@ public class DeleteController {
         String sqlQuery = queryBuilder.getSql();
         log.info(sqlQuery);
 
-        jdbcTemplate.execute(sqlQuery);
+        int affected = jdbcTemplate.update(sqlQuery);
+        if (affected != 1)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No entry found with ROWID=" + rowid);
         return ResponseEntity.noContent().build();
     }
 }
