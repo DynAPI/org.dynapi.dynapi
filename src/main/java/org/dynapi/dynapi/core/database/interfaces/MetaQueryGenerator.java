@@ -1,21 +1,21 @@
-package org.dynapi.dynapi.core.db.meta;
+package org.dynapi.dynapi.core.database.interfaces;
 
 public interface MetaQueryGenerator {
     /**
      * returns an SQL-Query that returns the available database schemas <br>
-     * format: {@code {'schemaname'}}
+     * format: {@code {'schema_name'}}
      */
     String listSchemas();
 
     /**
      * returns an SQL-Query that returns the available tables with their schema <br>
-     * format: {@code {'schemaname', 'tablename'}}
+     * format: {@code {'schema_name', 'table_name'}}
      */
     String listTables();
 
     /**
      * returns an SQL-Query that returns the available tables of a specific schema <br>
-     * format: {@code {'schemaname', 'tablename'}}
+     * format: {@code {'schema_name', 'table_name'}}
      * @param schemaName database schema
      */
     String listTablesOfSchema(String schemaName);

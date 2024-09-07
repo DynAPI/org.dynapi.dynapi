@@ -10,10 +10,12 @@ import org.dynapi.openapispec.core.OperationType;
 import org.dynapi.openapispec.core.PathBuilder;
 import org.dynapi.openapispec.core.ResponseBuilder;
 import org.dynapi.openapispec.core.objects.Parameter;
+import org.dynapi.openapispec.core.objects.Response;
 import org.dynapi.openapispec.core.objects.Tag;
-import org.dynapi.openapispec.core.types.TArray;
-import org.dynapi.openapispec.core.types.TObject;
-import org.dynapi.openapispec.core.types.TString;
+import org.dynapi.openapispec.core.schema.TArray;
+import org.dynapi.openapispec.core.schema.TObject;
+import org.dynapi.openapispec.core.schema.TString;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -33,13 +35,13 @@ public class MetaOpenApiProvider implements OpenApiProvider {
                 .build()
         );
 
-        builder.addPath("/schemas", new PathBuilder()
+        builder.addPath("/meta/schemas", new PathBuilder()
                 .addMethod(OperationType.GET, new OperationBuilder()
                         .addTag("meta")
                         .summary("Lists available schemas")
                         .description("Lists information about the available schemas")
-                        .addResponse(200, new ResponseBuilder()
-                                .description("Success")
+                        .addResponse(HttpStatus.OK.value(), new ResponseBuilder()
+                                .description(HttpStatus.OK.getReasonPhrase())
                                 .addContent(new TArray()
                                         .addType(new TString())
                                 )
@@ -50,17 +52,17 @@ public class MetaOpenApiProvider implements OpenApiProvider {
                 .build()
         );
 
-        builder.addPath("/tables", new PathBuilder()
+        builder.addPath("/meta/tables", new PathBuilder()
                 .addMethod(OperationType.GET, new OperationBuilder()
                         .addTag("meta")
                         .summary("Lists tables and their schema")
                         .description("Lists information about the available tables")
-                        .addResponse(200, new ResponseBuilder()
-                                .description("Success")
+                        .addResponse(HttpStatus.OK.value(), new ResponseBuilder()
+                                .description(HttpStatus.OK.getReasonPhrase())
                                 .addContent(new TArray()
                                         .addType(new TObject()
-                                                .addProperty("schemaname", new TString())
-                                                .addProperty("tablename", new TString())
+                                                .addProperty("schema_name", new TString())
+                                                .addProperty("table_name", new TString())
                                         )
                                 )
                                 .build()
@@ -70,7 +72,7 @@ public class MetaOpenApiProvider implements OpenApiProvider {
                 .build()
         );
 
-        builder.addPath("/tables/{schema}", new PathBuilder()
+        builder.addPath("/meta/tables/{schema}", new PathBuilder()
                 .addCommonParameter(Parameter.builder()
                         .in(Parameter.In.PATH)
                         .required(true)
@@ -83,22 +85,26 @@ public class MetaOpenApiProvider implements OpenApiProvider {
                         .addTag("meta")
                         .summary("Lists tables if a schema")
                         .description("Lists information about the tables of a schema")
-                        .addResponse(200, new ResponseBuilder()
-                                .description("Success")
+                        .addResponse(HttpStatus.OK.value(), new ResponseBuilder()
+                                .description(HttpStatus.OK.getReasonPhrase())
                                 .addContent(new TArray()
                                         .addType(new TObject()
-                                                .addProperty("schemaname", new TString())
-                                                .addProperty("tablename", new TString())
+                                                .addProperty("schema_name", new TString())
+                                                .addProperty("table_name", new TString())
                                         )
                                 )
                                 .build()
+                        )
+                        .addResponse(
+                                HttpStatus.NOT_FOUND.value(),
+                                new Response.Ref(String.valueOf(HttpStatus.NOT_FOUND.value()))
                         )
                         .build()
                 )
                 .build()
         );
 
-        builder.addPath("/columns/{schema}/{table}", new PathBuilder()
+        builder.addPath("/meta/columns/{schema}/{table}", new PathBuilder()
                 .addCommonParameter(Parameter.builder()
                         .in(Parameter.In.PATH)
                         .required(true)
@@ -119,8 +125,8 @@ public class MetaOpenApiProvider implements OpenApiProvider {
                         .addTag("meta")
                         .summary("Lists columns of a table")
                         .description("Lists information about the columns of a table")
-                        .addResponse(200, new ResponseBuilder()
-                                .description("Success")
+                        .addResponse(HttpStatus.OK.value(), new ResponseBuilder()
+                                .description(HttpStatus.OK.getReasonPhrase())
                                 .addContent(new TArray()
                                         .addType(new TObject()
                                                 .addProperty("column_name", new TString())
@@ -128,6 +134,10 @@ public class MetaOpenApiProvider implements OpenApiProvider {
                                         )
                                 )
                                 .build()
+                        )
+                        .addResponse(
+                                HttpStatus.NOT_FOUND.value(),
+                                new Response.Ref(String.valueOf(HttpStatus.NOT_FOUND.value()))
                         )
                         .build()
                 )

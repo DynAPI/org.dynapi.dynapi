@@ -1,6 +1,6 @@
-package org.dynapi.dynapi.core.db.meta.impl;
+package org.dynapi.dynapi.core.database.impl.sqlite;
 
-import org.dynapi.dynapi.core.db.meta.MetaQueryGenerator;
+import org.dynapi.dynapi.core.database.interfaces.MetaQueryGenerator;
 import org.dynapi.squirtle.core.dialects.sqlite.SQLiteQuery;
 import org.dynapi.squirtle.core.queries.Schema;
 import org.dynapi.squirtle.core.queries.Selectable;
@@ -18,7 +18,7 @@ public class SQLiteMetaQueryGenerator implements MetaQueryGenerator {
         return new SQLiteQuery()
                 .from(pragma)
                 .select(
-                        pragma.field("name").as("schemaname")
+                        pragma.field("name").as("schema_name")
                 )
                 .getSql();
     }
@@ -29,8 +29,8 @@ public class SQLiteMetaQueryGenerator implements MetaQueryGenerator {
         return new SQLiteQuery()
                 .from(table_list)
                 .select(
-                        table_list.field("schema").as("schemaname"),
-                        table_list.field("name").as("tablename")
+                        table_list.field("schema").as("schema_name"),
+                        table_list.field("name").as("table_name")
                 )
                 .where(table_list.field("name").not_like("sqlite_%"))
                 .getSql();
@@ -42,8 +42,8 @@ public class SQLiteMetaQueryGenerator implements MetaQueryGenerator {
         return new SQLiteQuery()
                 .from(table)
                 .select(
-                        new ValueWrapper(schemaName).as("schemaname"),
-                        new Field("name", table).as("tablename")
+                        new ValueWrapper(schemaName).as("schema_name"),
+                        new Field("name", table).as("table_name")
                 )
                 .where(table.field("type").eq("table"))
                 .getSql();

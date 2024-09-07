@@ -1,5 +1,6 @@
 package org.dynapi.dynapi.core.openapi;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dynapi.openapispec.OpenApiSpecBuilder;
 import org.dynapi.openapispec.core.objects.Contact;
 import org.dynapi.openapispec.core.objects.Info;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class OpenApiManager {
     public static List<OpenApiProvider> providers = new ArrayList<>();
 
@@ -34,7 +36,9 @@ public class OpenApiManager {
             try {
                 provider.generateOpenAPISpecification(specBuilder);
             } catch (Throwable e) {
-                generationErrors.put(provider.getClass().getCanonicalName(), e);
+                String providerName = provider.getClass().getCanonicalName();
+                log.error("Error generating OpenAPI specification for {}", providerName, e);
+                generationErrors.put(providerName, e);
             }
         }
 
