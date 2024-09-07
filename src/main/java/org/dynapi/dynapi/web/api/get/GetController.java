@@ -3,14 +3,11 @@ package org.dynapi.dynapi.web.api.get;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dynapi.dynapi.core.db.DatabaseUtil;
+import org.dynapi.dynapi.core.database.interfaces.Database;
 import org.dynapi.dynapi.core.query.QueryConfig;
 import org.dynapi.dynapi.core.query.QueryConfigParser;
 import org.dynapi.squirtle.core.PseudoColumns;
-import org.dynapi.squirtle.core.queries.Query;
-import org.dynapi.squirtle.core.queries.QueryBuilder;
-import org.dynapi.squirtle.core.queries.Schema;
-import org.dynapi.squirtle.core.queries.Table;
+import org.dynapi.squirtle.core.queries.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +27,7 @@ import java.util.stream.Stream;
 @RestController
 @RequestMapping("/api")
 public class GetController {
-    private final Query query;
-    private final DatabaseUtil databaseUtil;
+    private final Database database;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -46,11 +42,11 @@ public class GetController {
     ) {
         QueryConfig queryConfig = QueryConfigParser.parse(request);
 
-        databaseUtil.validateColumnAgainstTable(queryConfig.getColumns(), schemaName, tableName);
+        database.validateThatTableHasColumns(schemaName, tableName, queryConfig.getColumns());
 
         Schema schema = new Schema(schemaName);
         Table table = schema.table(tableName);
-        QueryBuilder queryBuilder = query
+        QueryBuilder queryBuilder = database.newQuery()
                 .from(table)
                 .select((Object[]) queryConfig.getColumns());
 
@@ -82,11 +78,11 @@ public class GetController {
     ) {
         QueryConfig queryConfig = QueryConfigParser.parse(request);
 
-        databaseUtil.validateColumnAgainstTable(queryConfig.getColumns(), schemaName, tableName);
+        database.validateThatTableHasColumns(schemaName, tableName, queryConfig.getColumns());
 
         Schema schema = new Schema(schemaName);
         Table table = schema.table(tableName);
-        QueryBuilder queryBuilder = query
+        QueryBuilder queryBuilder = database.newQuery()
                 .from(table)
                 .select((Object[]) queryConfig.getColumns())
                 .limit(1);
@@ -120,11 +116,11 @@ public class GetController {
     ) {
         QueryConfig queryConfig = QueryConfigParser.parse(request);
 
-        databaseUtil.validateColumnAgainstTable(queryConfig.getColumns(), schemaName, tableName);
+        database.validateThatTableHasColumns(schemaName, tableName, queryConfig.getColumns());
 
         Schema schema = new Schema(schemaName);
         Table table = schema.table(tableName);
-        QueryBuilder queryBuilder = query
+        QueryBuilder queryBuilder = database.newQuery()
                 .from(table)
                 .select((Object[]) queryConfig.getColumns())
                 .where(PseudoColumns.RowID.eq(rowid))

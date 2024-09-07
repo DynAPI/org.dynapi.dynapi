@@ -1,6 +1,6 @@
-package org.dynapi.dynapi.core.db.meta.impl;
+package org.dynapi.dynapi.core.database.impl.postgresql;
 
-import org.dynapi.dynapi.core.db.meta.MetaQueryGenerator;
+import org.dynapi.dynapi.core.database.interfaces.MetaQueryGenerator;
 import org.dynapi.squirtle.core.dialects.postgresql.PostgreSQLQuery;
 import org.dynapi.squirtle.core.queries.Schema;
 import org.dynapi.squirtle.core.queries.Table;
@@ -10,7 +10,7 @@ public class PostgreSQLMetaQueryGenerator implements MetaQueryGenerator {
     @Override
     public String listSchemas() {
         Table pgNamespace = new Schema("pg_catalog").table("pg_namespace");
-        Field schemaName = pgNamespace.field("nspname").as("schemaname");
+        Field schemaName = pgNamespace.field("nspname").as("schema_name");
         return new PostgreSQLQuery()
             .from(pgNamespace)
             .select(schemaName)
@@ -21,8 +21,8 @@ public class PostgreSQLMetaQueryGenerator implements MetaQueryGenerator {
     @Override
     public String listTables() {
         Table pgTables = new Schema("pg_catalog").table("pg_tables");
-        Field schemaName = pgTables.field("schemaname");
-        Field tableName = pgTables.field("tablename");
+        Field schemaName = pgTables.field("schemaname").as("schema_name");
+        Field tableName = pgTables.field("tablename").as("table_name");
         return new PostgreSQLQuery()
                 .from(pgTables)
                 .select(schemaName, tableName)
@@ -34,8 +34,8 @@ public class PostgreSQLMetaQueryGenerator implements MetaQueryGenerator {
     @Override
     public String listTablesOfSchema(String ofSchemaName) {
         Table pgTables = new Schema("pg_catalog").table("pg_tables");
-        Field schemaName = pgTables.field("schemaname");
-        Field tableName = pgTables.field("tablename");
+        Field schemaName = pgTables.field("schema_name");
+        Field tableName = pgTables.field("table_name");
         return new PostgreSQLQuery()
                 .from(pgTables)
                 .select(schemaName, tableName)
@@ -54,7 +54,7 @@ public class PostgreSQLMetaQueryGenerator implements MetaQueryGenerator {
                 .from(columns)
                 .select(
                         columns.field("column_name").as("column_name"),
-                        columns.field("udt_name").as("type")
+                        columns.field("data_type").as("type")
                 )
                 .where(tableSchema.eq(schema).and(tableName.eq(table)))
                 .getSql();
