@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,7 @@ public class DeleteController {
     /**
      * deletes one or more entries
      */
+    @Transactional
     @DeleteMapping(value = "/{schema}/{table}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteMultiple(
             HttpServletRequest request,
@@ -72,6 +74,7 @@ public class DeleteController {
     /**
      * deletes one or more entries
      */
+    @Transactional
     @DeleteMapping(value = "/{schema}/{table}/{rowid}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteByRowId(
             @PathVariable("schema") String schemaName,
@@ -83,14 +86,16 @@ public class DeleteController {
         QueryBuilder queryBuilder = database.newQuery()
                 .from(table)
                 .delete()
-                .where(PseudoColumns.RowID.eq(rowid))
-                .limit(1);
+                .where(PseudoColumns.RowID.eq(rowid));
+                //.limit(1) no limit in case multiple would be affected (which should be impossible)
 
         String sqlQuery = queryBuilder.getSql();
         log.info(sqlQuery);
 
         int affected = jdbcTemplate.update(sqlQuery);
-        if (affected != 1)
+        if (affected > 1)  // should never happen. but just to be sure
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Somehow more than one row would be deleted");
+        if (affected == 0)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No entry found with ROWID=" + rowid);
         return ResponseEntity.noContent().build();
     }
