@@ -36,7 +36,7 @@ repositories {
 
 dependencies {
     // dynapi
-    implementation 'org.dynapi:squirtle:0.5.9'
+    implementation 'org.dynapi:squirtle:0.5.10'
     implementation 'org.dynapi:openapispec:0.7.1'
     implementation 'org.dynapi:json-schema-gen:0.9.0'
     implementation 'org.dynapi:common:0.3.2'
