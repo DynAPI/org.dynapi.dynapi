@@ -13,6 +13,7 @@ public interface Database {
 
     /**
      * <b>note:</b> it's recommended to use the getter instead
+     *
      * @return a dialect appropriate {@link MetaQueryGenerator} used to fetch table-information
      * @see #getSchemaNames()
      * @see #getTableNamesOfSchema(String)
@@ -47,7 +48,7 @@ public interface Database {
 
     /**
      * @param schemaName schema of the table
-     * @param tableName table
+     * @param tableName  table
      * @return column-information of the table
      */
     List<ColumnInformation> getColumnInformationOfTable(@NonNull String schemaName, @NonNull String tableName);
@@ -62,14 +63,14 @@ public interface Database {
 
     /**
      * @param schemaName name of the schema of the table
-     * @param tableName name of the table
+     * @param tableName  name of the table
      * @return that the table exists
      */
     boolean existsTable(@NonNull String schemaName, @NonNull String tableName);
 
     /**
-     * @param schemaName name of the schema of the table
-     * @param tableName name of the table
+     * @param schemaName  name of the schema of the table
+     * @param tableName   name of the table
      * @param columnNames columns to verify
      * @return that all specified columns exist on the table
      */
@@ -78,8 +79,9 @@ public interface Database {
     /**
      * Utility-function used to validate that a table has all {@code columns} <br>
      * If {@code columns} contains {@code *} then it's directly marked as valid
-     * @param schemaName schema-name
-     * @param tableName table-name
+     *
+     * @param schemaName  schema-name
+     * @param tableName   table-name
      * @param columnNames columns to check again
      * @throws org.springframework.web.server.ResponseStatusException if one or more columns are not existing
      */

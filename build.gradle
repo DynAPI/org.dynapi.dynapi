@@ -36,7 +36,7 @@ repositories {
 
 dependencies {
     // dynapi
-    implementation 'org.dynapi:squirtle:0.5.9'
+    implementation 'org.dynapi:squirtle:0.5.10'
     implementation 'org.dynapi:openapispec:0.7.1'
     implementation 'org.dynapi:json-schema-gen:0.9.0'
     implementation 'org.dynapi:common:0.3.2'
@@ -46,7 +46,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    // lambok
+    // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
@@ -54,9 +54,7 @@ dependencies {
     // json/yaml
     implementation 'org.json:json:20240303'
     implementation 'org.yaml:snakeyaml'
-    // databases
-    runtimeOnly 'com.mysql:mysql-connector-j'
-    runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
+    // databases  // todo: remove and add via plugin-system
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'org.xerial:sqlite-jdbc'
     // testing

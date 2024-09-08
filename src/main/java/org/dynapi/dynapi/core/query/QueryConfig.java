@@ -22,5 +22,5 @@ public class QueryConfig {
      */
     private OrderBy[] orderBy = null;
 
-    public record OrderBy(String column, Order order) {};
+    public record OrderBy(String column, Order order) {}
 }

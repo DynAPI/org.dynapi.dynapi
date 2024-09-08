@@ -12,10 +12,10 @@ public class PostgreSQLMetaQueryGenerator implements MetaQueryGenerator {
         Table pgNamespace = new Schema("pg_catalog").table("pg_namespace");
         Field schemaName = pgNamespace.field("nspname").as("schema_name");
         return new PostgreSQLQuery()
-            .from(pgNamespace)
-            .select(schemaName)
-            .where(schemaName.not_like("pg_%"))
-            .getSql();
+                .from(pgNamespace)
+                .select(schemaName)
+                .where(schemaName.not_like("pg_%"))
+                .getSql();
     }
 
     @Override
