@@ -27,6 +27,9 @@ public class QueryConfigParser {
         final Integer pageSize = apiConfiguration.getPageSize();
         if (apiConfiguration.isApplyDefaultPagination())
             queryConfig.setLimit(pageSize);
+        final Integer maxLimit = apiConfiguration.getMaxLimit();
+        if (maxLimit != null)
+            queryConfig.setLimit(maxLimit);
 
         while (parameterNames.hasMoreElements()) {
             final String parameterName = parameterNames.nextElement();
@@ -34,7 +37,12 @@ public class QueryConfigParser {
                 case "column" -> queryConfig.setColumns(request.getParameterValues(parameterName));
                 case "columns" -> queryConfig.setColumns(parseColumns(request.getParameter(parameterName)));
                 case "where" -> queryConfig.setWheres(parseWheres(request.getParameterValues(parameterName)));
-                case "limit" -> queryConfig.setLimit(Integer.parseInt(request.getParameter(parameterName)));
+                case "limit" -> {
+                    int limit = Integer.parseInt(request.getParameter(parameterName));
+                    if (maxLimit != null && limit > maxLimit)
+                        throw new IllegalArgumentException("Limit must be less than " + maxLimit + " but was " + limit);
+                    queryConfig.setLimit(limit);
+                }
                 case "offset" -> queryConfig.setOffset(Integer.parseInt(request.getParameter(parameterName)));
                 case "order_by" -> queryConfig.setOrderBy(parseOrderBy(request.getParameterValues(parameterName)));
                 case "page" -> {
