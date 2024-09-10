@@ -54,14 +54,14 @@ public class DynAPIConfiguration {
         @Constraints(pattern = "^/.*")
         private String baseurl = "/";
         @Description("Controls response compression to improve transfer speed and bandwidth utilization")
-        private Compression compression = null;
+        private CompressionConfiguration compression = null;
 
         @Data
         @RequiredArgsConstructor
-        public static class Compression {
-            @Description("whether content should get compressed")
+        public static class CompressionConfiguration {
+            @Description("Whether content should get compressed")
             private boolean enabled = true;
-            @Description("minimum response size to send compressed")
+            @Description("Minimum response size to send compressed")
             @Constraints(pattern = "(?i)^\\d+(?:b|kb|mb|gb|tb)$")
             private String minResponseSize = null;
         }

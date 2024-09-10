@@ -28,7 +28,7 @@ public class SystemPropertyUpdater {
             updateServerCompression(configuration.getCompression());
     }
 
-    private static void updateServerCompression(DynAPIConfiguration.ServerConfiguration.Compression configuration) {
+    private static void updateServerCompression(DynAPIConfiguration.ServerConfiguration.CompressionConfiguration configuration) {
         if (configuration.isEnabled())
             System.setProperty("server.compression.enabled", String.valueOf(true));
 
