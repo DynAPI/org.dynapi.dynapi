@@ -58,6 +58,10 @@ public class DynAPIConfiguration {
         private String baseurl = "/";
         @Description("Controls response compression to improve transfer speed and bandwidth utilization")
         private CompressionConfiguration compression = null;
+        @Description("Type of shutdown that the server will support. " +
+                "'immediate' will cancel all pending requests while 'graceful' waits for pending requests to complete.")
+        @Constraints(options = {"immediate", "graceful"})
+        private String shutdown = null;
 
         @Data
         @RequiredArgsConstructor

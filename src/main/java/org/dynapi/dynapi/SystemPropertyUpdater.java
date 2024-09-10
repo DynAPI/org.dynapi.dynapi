@@ -29,6 +29,9 @@ public class SystemPropertyUpdater {
 
         if (configuration.getCompression() != null)
             updateServerCompression(configuration.getCompression());
+
+        if (configuration.getShutdown() != null)
+            System.setProperty("server.shutdown", configuration.getShutdown());
     }
 
     private static void updateServerCompression(DynAPIConfiguration.ServerConfiguration.CompressionConfiguration configuration) {
