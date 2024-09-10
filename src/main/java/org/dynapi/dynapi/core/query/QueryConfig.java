@@ -10,6 +10,10 @@ public class QueryConfig {
      */
     private String[] columns = new String[]{"*"};
     /**
+     * filter
+     */
+    private Where[] wheres = null;
+    /**
      * maximum amount to query (for pagination)
      */
     private Integer limit = null;
@@ -22,5 +26,6 @@ public class QueryConfig {
      */
     private OrderBy[] orderBy = null;
 
+    public record Where(String column, Object value) {}
     public record OrderBy(String column, Order order) {}
 }
