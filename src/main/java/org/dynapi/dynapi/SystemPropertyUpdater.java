@@ -12,6 +12,7 @@ public class SystemPropertyUpdater {
         updateServer(configuration.getServer());
         updateDatabase(configuration.getDatabase());
         updateApi(configuration.getApi());
+        updateLogging(configuration.getLogging());
     }
 
     private static void updateServer(DynAPIConfiguration.ServerConfiguration configuration) {
@@ -59,5 +60,10 @@ public class SystemPropertyUpdater {
 
         if (configuration.getPassword() != null)
             System.setProperty("spring.datasource.password", configuration.getPassword());
+    }
+
+    private static void updateLogging(DynAPIConfiguration.LoggingConfiguration configuration) {
+        if (configuration.getLevel() != null)
+            System.setProperty("logging.level.org.dynapi", configuration.getLevel());
     }
 }

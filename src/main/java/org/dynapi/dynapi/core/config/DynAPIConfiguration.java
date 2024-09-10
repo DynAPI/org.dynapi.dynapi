@@ -24,6 +24,8 @@ public class DynAPIConfiguration {
     private ApiConfiguration api = new ApiConfiguration();
     @Description("Configuration for the database connection")
     private DatabaseConfiguration database = new DatabaseConfiguration();
+    @Description("Configuration for logging")
+    private LoggingConfiguration logging = new LoggingConfiguration();
 
     public static DynAPIConfiguration load() {
         LoaderOptions loaderOptions = new LoaderOptions();
@@ -113,5 +115,13 @@ public class DynAPIConfiguration {
         @RequiredIf("username")
         @Description("Password of the user to connect with")
         private String password = null;
+    }
+
+    @Data
+    @RequiredArgsConstructor
+    public static class LoggingConfiguration {
+        @Description("Specifies the details that are logged")
+        @Constraints(options = {"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "OFF"})
+        private String level = null;
     }
 }
