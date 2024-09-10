@@ -62,6 +62,12 @@ public class DynAPIConfiguration {
                 "If the request is enormous or the connection is slow it will be canceled. " +
                 "This option configures the maximum timeout for such requests.")
         private Integer streamingResponseTimeout = null;
+        @Description("specify the page size")
+        @Constraints(gt = 0)
+        @RequiredIf("applyDefaultPagination")
+        private Integer pageSize = null;
+        @Description("whether to apply the pagination on each request")
+        private boolean applyDefaultPagination = false;
     }
 
     @Data

@@ -4,20 +4,32 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dynapi.dynapi.core.config.DynAPIConfiguration;
 import org.dynapi.squirtle.core.enums.Order;
+import org.springframework.stereotype.Component;
 
 import java.util.Enumeration;
 
 @Slf4j
+@Component
+@AllArgsConstructor
 public class QueryConfigParser {
-    public static QueryConfig parse(HttpServletRequest request) {
-        QueryConfig queryConfig = new QueryConfig();
+    private final DynAPIConfiguration configuration;
 
-        Enumeration<String> parameterNames = request.getParameterNames();
+    public QueryConfig parse(HttpServletRequest request) {
+        final QueryConfig queryConfig = new QueryConfig();
+
+        final Enumeration<String> parameterNames = request.getParameterNames();
+
+        final DynAPIConfiguration.ApiConfiguration apiConfiguration = configuration.getApi();
+        final Integer pageSize = apiConfiguration.getPageSize();
+        if (apiConfiguration.isApplyDefaultPagination())
+            queryConfig.setLimit(pageSize);
 
         while (parameterNames.hasMoreElements()) {
-            String parameterName = parameterNames.nextElement();
+            final String parameterName = parameterNames.nextElement();
             switch (parameterName) {
                 case "column" -> queryConfig.setColumns(request.getParameterValues(parameterName));
                 case "columns" -> queryConfig.setColumns(parseColumns(request.getParameter(parameterName)));
@@ -25,6 +37,12 @@ public class QueryConfigParser {
                 case "limit" -> queryConfig.setLimit(Integer.parseInt(request.getParameter(parameterName)));
                 case "offset" -> queryConfig.setOffset(Integer.parseInt(request.getParameter(parameterName)));
                 case "order_by" -> queryConfig.setOrderBy(parseOrderBy(request.getParameterValues(parameterName)));
+                case "page" -> {
+                    if (pageSize == null) continue;
+                    final int page = Integer.parseInt(request.getParameter(parameterName));
+                    queryConfig.setLimit(pageSize);
+                    queryConfig.setOffset(page * pageSize);
+                }
             }
         }
 

@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 @RequestMapping("/api")
 public class GetController {
     private final Database database;
+    private final QueryConfigParser queryConfigParser;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -40,7 +41,7 @@ public class GetController {
             @PathVariable("schema") String schemaName,
             @PathVariable("table") String tableName
     ) {
-        QueryConfig queryConfig = QueryConfigParser.parse(request);
+        QueryConfig queryConfig = queryConfigParser.parse(request);
 
         database.validateThatTableHasColumns(schemaName, tableName, queryConfig.getColumns());
 
@@ -81,7 +82,7 @@ public class GetController {
             @PathVariable("schema") String schemaName,
             @PathVariable("table") String tableName
     ) {
-        QueryConfig queryConfig = QueryConfigParser.parse(request);
+        QueryConfig queryConfig = queryConfigParser.parse(request);
 
         database.validateThatTableHasColumns(schemaName, tableName, queryConfig.getColumns());
 
@@ -124,7 +125,7 @@ public class GetController {
             @PathVariable("table") String tableName,
             @PathVariable("rowid") long rowid
     ) {
-        QueryConfig queryConfig = QueryConfigParser.parse(request);
+        QueryConfig queryConfig = queryConfigParser.parse(request);
 
         database.validateThatTableHasColumns(schemaName, tableName, queryConfig.getColumns());
 
