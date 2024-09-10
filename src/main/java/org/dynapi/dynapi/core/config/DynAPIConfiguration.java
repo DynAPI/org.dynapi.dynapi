@@ -53,6 +53,18 @@ public class DynAPIConfiguration {
         @Description("Base-URL of the server")
         @Constraints(pattern = "^/.*")
         private String baseurl = "/";
+        @Description("Controls response compression to improve transfer speed and bandwidth utilization")
+        private Compression compression = null;
+
+        @Data
+        @RequiredArgsConstructor
+        public static class Compression {
+            @Description("whether content should get compressed")
+            private boolean enabled = true;
+            @Description("minimum response size to send compressed")
+            @Constraints(pattern = "(?i)^\\d+(?:b|kb|mb|gb|tb)$")
+            private String minResponseSize = null;
+        }
     }
 
     @Data
@@ -69,9 +81,9 @@ public class DynAPIConfiguration {
     public static class WebConfiguration {
         @Description("Whether to make the openapi endpoint available (required for swagger and redoc)")
         private boolean openapi = true;
-        @Description("Whether to offer swagger as documentation tool")
+        @Description("Whether to offer swagger as a documentation tool")
         private boolean swagger = true;
-        @Description("Whether to offer redoc as documentation tool")
+        @Description("Whether to offer redoc as a documentation tool")
         private boolean redoc = true;
     }
 

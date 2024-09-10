@@ -25,6 +25,17 @@ public class SystemPropertyUpdater {
 
         if (configuration.getBaseurl() != null)
             System.setProperty("server.servlet.context-path", configuration.getBaseurl());
+
+        if (configuration.getCompression() != null)
+            updateServerCompression(configuration.getCompression());
+    }
+
+    private static void updateServerCompression(DynAPIConfiguration.ServerConfiguration.Compression configuration) {
+        if (configuration.isEnabled())
+            System.setProperty("server.compression.enabled", String.valueOf(true));
+
+        if (configuration.getMinResponseSize() != null)
+            System.setProperty("server.compression.min-response-size", configuration.getMinResponseSize());
     }
 
     private static void updateApi(DynAPIConfiguration.ApiConfiguration configuration) {
