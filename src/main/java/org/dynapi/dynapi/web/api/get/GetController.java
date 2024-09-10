@@ -50,6 +50,11 @@ public class GetController {
                 .from(table)
                 .select((Object[]) queryConfig.getColumns());
 
+        if (queryConfig.getWheres() != null) {
+            for (QueryConfig.Where where : queryConfig.getWheres())
+                queryBuilder.where(table.field(where.column()).eq(where.value()));
+        }
+
         if (queryConfig.getLimit() != null)
             queryBuilder.limit(queryConfig.getLimit());
         if (queryConfig.getOffset() != null)
@@ -86,6 +91,11 @@ public class GetController {
                 .from(table)
                 .select((Object[]) queryConfig.getColumns())
                 .limit(1);
+
+        if (queryConfig.getWheres() != null) {
+            for (QueryConfig.Where where : queryConfig.getWheres())
+                queryBuilder.where(table.field(where.column()).eq(where.value()));
+        }
 
         if (queryConfig.getOffset() != null)
             queryBuilder.offset(queryConfig.getOffset());
