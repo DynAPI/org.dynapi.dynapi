@@ -15,7 +15,8 @@ import java.io.*;
 @Description("DynAPI Configuration")
 public class DynAPIConfiguration {
     @Description("Enable additional debug information.\nWarning: This may disclose sensible information")
-    private boolean debug = false;
+    @Constraints(options = {"off", "on", "extreme"})
+    private String debug = "off";
     @Description("Configuration for the HTTP-server")
     private ServerConfiguration server = new ServerConfiguration();
     @Description("Configuration for the features of the webpages")

@@ -6,8 +6,10 @@ import org.dynapi.dynapi.core.config.DynAPIConfiguration;
 @Slf4j
 public class SystemPropertyUpdater {
     public static void updateProperties(DynAPIConfiguration configuration) {
-        if ((configuration.isDebug()))
-            System.setProperty("spring.profiles.active", "dev");
+        switch (configuration.getDebug()) {
+            case "on" -> System.setProperty("spring.profiles.active", "dev");
+            case "extreme" -> System.setProperty("spring.profiles.active", "debug");
+        }
 
         updateServer(configuration.getServer());
         updateDatabase(configuration.getDatabase());
