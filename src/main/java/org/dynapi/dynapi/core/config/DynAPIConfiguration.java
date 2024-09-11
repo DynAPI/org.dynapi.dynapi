@@ -15,7 +15,8 @@ import java.io.*;
 @Description("DynAPI Configuration")
 public class DynAPIConfiguration {
     @Description("Enable additional debug information.\nWarning: This may disclose sensible information")
-    private boolean debug = false;
+    @Constraints(options = {"off", "on", "extreme"})
+    private String debug = "off";
     @Description("Configuration for the HTTP-server")
     private ServerConfiguration server = new ServerConfiguration();
     @Description("Configuration for the features of the webpages")
@@ -24,6 +25,8 @@ public class DynAPIConfiguration {
     private ApiConfiguration api = new ApiConfiguration();
     @Description("Configuration for the database connection")
     private DatabaseConfiguration database = new DatabaseConfiguration();
+    @Description("Configuration for logging")
+    private LoggingConfiguration logging = new LoggingConfiguration();
 
     public static DynAPIConfiguration load() {
         LoaderOptions loaderOptions = new LoaderOptions();
@@ -53,6 +56,22 @@ public class DynAPIConfiguration {
         @Description("Base-URL of the server")
         @Constraints(pattern = "^/.*")
         private String baseurl = "/";
+        @Description("Controls response compression to improve transfer speed and bandwidth utilization")
+        private CompressionConfiguration compression = null;
+        @Description("Type of shutdown that the server will support. " +
+                "'immediate' will cancel all pending requests while 'graceful' waits for pending requests to complete.")
+        @Constraints(options = {"immediate", "graceful"})
+        private String shutdown = null;
+
+        @Data
+        @RequiredArgsConstructor
+        public static class CompressionConfiguration {
+            @Description("Whether content should get compressed")
+            private boolean enabled = true;
+            @Description("Minimum response size to send compressed")
+            @Constraints(pattern = "(?i)^\\d+(?:b|kb|mb|gb|tb)$")
+            private String minResponseSize = null;
+        }
     }
 
     @Data
@@ -69,9 +88,9 @@ public class DynAPIConfiguration {
     public static class WebConfiguration {
         @Description("Whether to make the openapi endpoint available (required for swagger and redoc)")
         private boolean openapi = true;
-        @Description("Whether to offer swagger as documentation tool")
+        @Description("Whether to offer swagger as a documentation tool")
         private boolean swagger = true;
-        @Description("Whether to offer redoc as documentation tool")
+        @Description("Whether to offer redoc as a documentation tool")
         private boolean redoc = true;
     }
 
@@ -101,5 +120,13 @@ public class DynAPIConfiguration {
         @RequiredIf("username")
         @Description("Password of the user to connect with")
         private String password = null;
+    }
+
+    @Data
+    @RequiredArgsConstructor
+    public static class LoggingConfiguration {
+        @Description("Specifies the details that are logged")
+        @Constraints(options = {"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "OFF"})
+        private String level = null;
     }
 }
