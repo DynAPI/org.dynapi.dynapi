@@ -81,6 +81,16 @@ public class DynAPIConfiguration {
                 "If the request is enormous or the connection is slow it will be canceled. " +
                 "This option configures the maximum timeout for such requests.")
         private Integer streamingResponseTimeout = null;
+        @Description("Maximum number of entries to be fetched at once." +
+                "Used to prevent fetching of all entries of a table.")
+        @Constraints(gt = 0)
+        private Integer maxLimit = null;
+        @Description("Specify the page size")
+        @Constraints(gt = 0)
+        @RequiredIf("applyDefaultPagination")
+        private Integer pageSize = null;
+        @Description("Whether to apply the pagination on each request")
+        private boolean applyDefaultPagination = false;
     }
 
     @Data
