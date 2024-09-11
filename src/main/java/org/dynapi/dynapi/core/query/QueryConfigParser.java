@@ -68,7 +68,7 @@ public class QueryConfigParser {
             throw new IllegalArgumentException("Could not parse JSON string.", e);
         }
         if (!jsonNode.isArray()) throw new IllegalArgumentException("JSON is not an array.");
-        String[] columns = new String[jsonNode.size()];
+        final String[] columns = new String[jsonNode.size()];
 
         for (int i = 0; i < jsonNode.size(); i++) {
             JsonNode elementNode = jsonNode.get(i);
@@ -80,11 +80,11 @@ public class QueryConfigParser {
     }
 
     private static QueryConfig.Where[] parseWheres(String[] jsonStrings) {
-        QueryConfig.Where[] wheres = new QueryConfig.Where[jsonStrings.length];
-        ObjectMapper objectMapper = new ObjectMapper();
+        final QueryConfig.Where[] wheres = new QueryConfig.Where[jsonStrings.length];
+        final ObjectMapper objectMapper = new ObjectMapper();
         for (int i = 0; i < jsonStrings.length; i++) {
-            String jsonString = jsonStrings[i];
-            JsonNode node;
+            final String jsonString = jsonStrings[i];
+            final JsonNode node;
             try {
                 node = objectMapper.readTree(jsonString);
             } catch (JsonProcessingException e) {
@@ -93,13 +93,13 @@ public class QueryConfigParser {
             if (!node.isArray()) throw new IllegalArgumentException("'where' is not an array.");
             if (node.size() != 2) throw new IllegalArgumentException("'where' does not match [column,value].");
 
-            JsonNode columnNode = node.get(0);
+            final JsonNode columnNode = node.get(0);
             if (!columnNode.isTextual()) throw new IllegalArgumentException("'where'@column is not a string.");
-            String column = columnNode.textValue();
+            final String column = columnNode.textValue();
             if (column.isBlank()) throw new IllegalArgumentException("'where'@column is bad");
 
-            JsonNode valueNode = node.get(1);
-            Object value = switch (valueNode.getNodeType()) {
+            final JsonNode valueNode = node.get(1);
+            final Object value = switch (valueNode.getNodeType()) {
                 case STRING -> valueNode.textValue();
                 case NUMBER -> valueNode.numberValue();
                 case BOOLEAN -> valueNode.booleanValue();
@@ -116,10 +116,10 @@ public class QueryConfigParser {
      * format: 'header-name' | 'header-name;[asc|ASC|desc|DESC]'
      */
     private static QueryConfig.OrderBy[] parseOrderBy(String[] values) {
-        QueryConfig.OrderBy[] orderBys = new QueryConfig.OrderBy[values.length];
+        final QueryConfig.OrderBy[] orderBys = new QueryConfig.OrderBy[values.length];
         for (int i = 0; i < values.length; i++) {
-            String value = values[i];
-            int sepIndex = value.indexOf(";");
+            final String value = values[i];
+            final int sepIndex = value.indexOf(";");
             if (sepIndex == -1) {
                 orderBys[i] = new QueryConfig.OrderBy(value, null);
             } else if (value.indexOf(";", sepIndex + 1) != -1) {
