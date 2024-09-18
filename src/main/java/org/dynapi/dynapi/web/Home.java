@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dynapi.dynapi.core.config.DynAPIConfiguration;
 import org.dynapi.dynapi.core.openapi.OpenApiManager;
-import org.json.JSONObject;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
