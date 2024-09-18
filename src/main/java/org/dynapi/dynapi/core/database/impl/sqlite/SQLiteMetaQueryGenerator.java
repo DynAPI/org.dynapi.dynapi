@@ -51,6 +51,7 @@ public class SQLiteMetaQueryGenerator implements MetaQueryGenerator {
 
     @Override
     public String listColumnsOfTable(String schemaName, String tableName) {
+        // todo: $schema.pragme_table_info($tableName)
         Selectable tableInfo = new TableValuedFunction("pragma_table_info", tableName);
         return new SQLiteQuery()
                 .from(tableInfo)

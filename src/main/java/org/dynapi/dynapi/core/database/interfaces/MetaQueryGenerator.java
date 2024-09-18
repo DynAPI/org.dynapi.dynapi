@@ -16,6 +16,7 @@ public interface MetaQueryGenerator {
     /**
      * returns an SQL-Query that returns the available tables of a specific schema <br>
      * format: {@code {'schema_name', 'table_name'}}
+     *
      * @param schemaName database schema
      */
     String listTablesOfSchema(String schemaName);
@@ -23,8 +24,9 @@ public interface MetaQueryGenerator {
     /**
      * returns an SQL-Query that returns the column-information of a specific table of a specific schema <br>
      * format: {@code {'column_name', 'type'}}
+     *
      * @param schemaName database schema
-     * @param tableName table of {@code schemaName}
+     * @param tableName  table of {@code schemaName}
      */
     String listColumnsOfTable(String schemaName, String tableName);
 }
