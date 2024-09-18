@@ -6,14 +6,15 @@ import org.dynapi.dynapi.core.config.DynAPIConfiguration;
 @Slf4j
 public class SystemPropertyUpdater {
     public static void updateProperties(DynAPIConfiguration configuration) {
-        if ((configuration.isDebug())) {
-            System.setProperty("debug", "true");
-//            System.setProperty("logging.level.root", "debug");
+        switch (configuration.getDebug()) {
+            case "on" -> System.setProperty("spring.profiles.active", "dev");
+            case "extreme" -> System.setProperty("spring.profiles.active", "debug");
         }
 
         updateServer(configuration.getServer());
         updateDatabase(configuration.getDatabase());
         updateApi(configuration.getApi());
+        updateLogging(configuration.getLogging());
     }
 
     private static void updateServer(DynAPIConfiguration.ServerConfiguration configuration) {
@@ -25,6 +26,20 @@ public class SystemPropertyUpdater {
 
         if (configuration.getBaseurl() != null)
             System.setProperty("server.servlet.context-path", configuration.getBaseurl());
+
+        if (configuration.getCompression() != null)
+            updateServerCompression(configuration.getCompression());
+
+        if (configuration.getShutdown() != null)
+            System.setProperty("server.shutdown", configuration.getShutdown());
+    }
+
+    private static void updateServerCompression(DynAPIConfiguration.ServerConfiguration.CompressionConfiguration configuration) {
+        if (configuration.isEnabled())
+            System.setProperty("server.compression.enabled", String.valueOf(true));
+
+        if (configuration.getMinResponseSize() != null)
+            System.setProperty("server.compression.min-response-size", configuration.getMinResponseSize());
     }
 
     private static void updateApi(DynAPIConfiguration.ApiConfiguration configuration) {
@@ -50,5 +65,10 @@ public class SystemPropertyUpdater {
 
         if (configuration.getPassword() != null)
             System.setProperty("spring.datasource.password", configuration.getPassword());
+    }
+
+    private static void updateLogging(DynAPIConfiguration.LoggingConfiguration configuration) {
+        if (configuration.getLevel() != null)
+            System.setProperty("logging.level.org.dynapi", configuration.getLevel());
     }
 }
